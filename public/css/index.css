@@ -1,0 +1,74 @@
+
+html{margin:0px; height: 100%;width:100%;padding:0px;
+}
+body{
+    font-family: sans-serif;
+    width:100%;
+    height:100%;
+    margin:0px;
+    padding:0px;
+}
+div#root{
+    width:50%;
+    margin:0px auto;
+    margin-top:10px;
+}
+.sudoku-cell{
+    border-left: 1px solid rgb(167,167,167);
+    border-top:1px solid rgb(167, 167, 167);
+    float: left;
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    padding:5px;
+    /* padding: 15px; */
+}
+.sudoku-cell-with-value{
+    width:100%;
+    text-align: center;
+    font-size: xx-large;
+}
+.sudoku-cell-initial-value{
+    color:black;
+}
+.sudoku-cell-determined-value{
+    color:blue;
+}
+
+.sudoku-possibilities-row{
+    clear: right;
+}
+.sudoku-row{
+    clear:both
+}
+
+.sudoku-cell-possibilities{
+    min-width: 3px;
+    width:33%;
+    float:left;
+    font-size:smaller;
+}
+.sudoku-cell-possibilities-hidden{
+    visibility: hidden;
+}
+.sudoku-cell-left-block-end{
+    border-left:1px solid black;
+}
+
+.sudoku-cell-top-block-end{
+    border-top:1px solid black;
+}
+
+.sudoku-cell-right-block-end{
+    border-right:1px solid black;
+}
+
+.sudoku-cell-bottom-block-end{
+    border-bottom:1px solid black;
+}
+
+
+.pnlSolve{
+    clear:both;
+}
+
