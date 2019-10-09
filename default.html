@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+
+    <!-- <link rel="stylesheet" href="public/css/bootstrap.min.css"> -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="public/js/SudokuSolver.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0px;
+            padding: 0px;
+            font-family: sans-serif;
+        }
+
+        div#holder {
+            max-width: 50%;
+            margin: 0px auto;
+            min-width: 25%;
+        }
+
+        .sudoku-cell-possibilities-hidden {
+            visibility: hidden;
+        }
+
+        .sudoku-row {
+            clear: both;
+        }
+
+        .sudoku-cell-with-value {
+            width: 100%;
+            text-align: center;
+            font-size: xx-large;
+        }
+
+        .sudoku-cell-initial-value {
+            color: black;
+        }
+
+        .sudoku-cell {
+            border-left: 1px solid rgb(167, 167, 167);
+            border-top: 1px solid rgb(167, 167, 167);
+            float: left;
+            width: 50px;
+            height: 50px;
+            vertical-align: middle;
+            padding: 5px;
+            /* padding: 15px; */
+        }
+
+        .sudoku-cell-possibilities {
+            min-width: 3px;
+            width: 33%;
+            float: left;
+            font-size: smaller;
+        }
+
+        .sudoku-cell-left-block-end {
+            border-left: 1px solid black;
+        }
+
+        .sudoku-cell-top-block-end {
+            border-top: 1px solid black;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .sudoku-cell-right-block-end {
+            border-right: 1px solid black;
+        }
+
+        .sudoku-cell-bottom-block-end {
+            border-bottom: 1px solid black;
+        }
+
+        /* .sudoku-cell-possibility{
+            width:5px;
+            height: 5px;
+            font-size: xx-small;
+        }
+        .sudoku-cell {
+            min-width: 45px;
+            min-height: 45px;
+            border:1px solid black;
+            padding:5px;
+        }
+        #container{
+            max-width:50%;
+            margin:0px auto;
+        } */
+    </style>
+
+    <script src="public/js/default.js"></script>
+    </script>
+
+</head>
+
+<body>
+    <div id="holder">
+        <h1>Visual Sudoku Solver</h1>
+
+        <section>
+            <textarea id="txtInitialValues" cols="30" rows="10">[
+                [0, 1, 0, 0, 0, 0, 0, 0, 0],
+                [6, 8, 7, 0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 9, 7, 0, 0, 3],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [7, 0, 0, 0, 0, 0, 3, 4, 0],
+                [0, 4, 0, 9, 2, 6, 0, 0, 0],
+                [0, 0, 9, 6, 0, 5, 0, 0, 2],
+                [0, 0, 2, 0, 3, 0, 0, 0, 0],
+                [5, 0, 0, 0, 1, 9, 7, 0, 0]
+            ]</textarea>
+            <button id="btnInitiate">Instantiate</button>
+        </section>
+        <section>
+            <div id="container" class='container-fluid'>
+                <div class='row' id='holder'></div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

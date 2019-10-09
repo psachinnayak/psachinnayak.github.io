@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="public/css/default.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-10">
+            <div class="row">
+                <h1>Visual Step by Step Solution for a Sudoku Game</h1>
+                <div>
+                    <textarea id="txtInitialValues" cols="30" rows="10">[
+                            [2, 4, 0, 0, 0, 0, 0, 1, 0],
+                            [6, 0, 0, 0, 0, 5, 0, 3, 0],
+                            [0, 3, 0, 4, 0, 0, 0, 5, 8],
+                            [0, 0, 0, 8, 0, 0, 0, 0, 0],
+                            [7, 0, 0, 3, 0, 0, 5, 0, 0],
+                            [0, 1, 0, 0, 5, 0, 7, 4, 0],
+                            [1, 2, 6, 0, 0, 8, 0, 0, 4],
+                            [0, 0, 0, 0, 0, 0, 8, 0, 0],
+                            [5, 0, 3, 7, 0, 0, 1, 2, 9]
+                        ]</textarea>
+                    <button id="btnInitialize" class="btn btn-primary">Initialize the game</button>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_0_0">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_0_1">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_0_2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_1_0">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_1_1">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_1_2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_2_0">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_2_1">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="row sub-grid" id="grid_2_2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="public/js/framework.js"></script>
+        <script src="public/js/default.js"></script>
+</body>
+
+</html>

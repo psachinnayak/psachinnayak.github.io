@@ -205,9 +205,6 @@ class SudokuBoard extends React.Component {
         }
         this.attemptToCalculateValuesByUniquesInRow(values, possibilities);
 
-
-        console.log(values);
-
         return values;
     }
 
@@ -275,23 +272,24 @@ class SudokuBoard extends React.Component {
 
 
         this.attemptToCalculateValues(values, newPossibilites);
-
+        // let countOfValues = this.countNumberOfValues(values);
+        // if (countOfValues == 9 * 9) {
+        //     alert("There are no empty spots left. Stop clicking that button");
+        // } else {
         newPossibilites = this.removeDuplicatesInRow(values, newPossibilites);
 
         newPossibilites = this.removeDuplicatesInColumn(values, newPossibilites);
 
         newPossibilites = this.removeDuplicatesInSubgrids(values, newPossibilites);
 
-        // let countBeforeCalculatingValues = this.countNumberOfValues(values);
-        // let countAfterCalculatingValues = this.countNumberOfValues(values);
         this.findAndClearByNSizeDuplicatesInRow(values, newPossibilites, 2);
-        // if (countBeforeCalculatingValues == countAfterCalculatingValues) {
 
-        // }
         this.setState({
             values: values,
             possibilities: newPossibilites
         });
+
+        // }
 
     }
     render() {
@@ -319,65 +317,3 @@ class SudokuBoard extends React.Component {
         return arr;
     }
 }
-
-
-const initial_easy1 = [
-    [3, 0, 6, 5, 0, 8, 4, 0, 0],
-    [5, 2, 0, 0, 0, 0, 0, 0, 0],
-    [0, 8, 7, 0, 0, 0, 0, 3, 1],
-    [0, 0, 3, 0, 1, 0, 0, 8, 0],
-    [9, 0, 0, 8, 6, 3, 0, 0, 5],
-    [0, 5, 0, 0, 9, 0, 6, 0, 0],
-    [1, 3, 0, 0, 0, 0, 2, 5, 0],
-    [0, 0, 0, 0, 0, 0, 0, 7, 4],
-    [0, 0, 5, 2, 0, 6, 3, 0, 0]
-];
-
-const initial_easy2 = [
-    [5, 4, 0, 0, 6, 0, 0, 7, 8],
-    [3, 0, 6, 1, 8, 0, 0, 2, 0],
-    [0, 9, 2, 0, 0, 4, 5, 0, 0],
-    [6, 0, 9, 0, 0, 0, 7, 0, 5],
-    [7, 1, 0, 4, 9, 6, 0, 0, 0],
-    [4, 0, 8, 0, 0, 3, 1, 0, 0],
-    [0, 0, 0, 0, 3, 0, 9, 0, 0],
-    [1, 8, 0, 0, 0, 0, 2, 5, 7],
-    [9, 5, 0, 0, 2, 7, 0, 0, 0]
-];
-
-const initial_medium1 = [
-    [0, 0, 3, 0, 0, 0, 0, 0, 0],
-    [0, 6, 0, 1, 3, 0, 2, 0, 0],
-    [7, 0, 0, 9, 0, 5, 0, 1, 0],
-    [0, 7, 0, 0, 0, 0, 1, 9, 6],
-    [8, 2, 0, 0, 0, 0, 7, 0, 0],
-    [0, 4, 0, 0, 0, 1, 0, 3, 2],
-    [0, 9, 6, 0, 0, 4, 0, 7, 8],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [5, 0, 8, 0, 6, 0, 4, 0, 9]
-];
-const initial_medium2 = [
-    [0, 8, 2, 3, 0, 6, 7, 0, 0],
-    [0, 6, 0, 0, 0, 0, 0, 0, 2],
-    [0, 3, 0, 2, 0, 4, 1, 0, 0],
-    [4, 0, 0, 8, 3, 0, 2, 0, 0],
-    [0, 0, 5, 0, 0, 0, 9, 0, 4],
-    [0, 0, 0, 0, 4, 0, 6, 0, 0],
-    [0, 0, 0, 0, 1, 0, 3, 7, 0],
-    [0, 5, 0, 0, 6, 0, 0, 2, 9],
-    [7, 0, 0, 0, 2, 0, 0, 0, 1]
-];
-const initial_medium3 = [
-    [2, 4, 0, 0, 0, 0, 0, 1, 0],
-    [6, 0, 0, 0, 0, 5, 0, 3, 0],
-    [0, 3, 0, 4, 0, 0, 0, 5, 8],
-    [0, 0, 0, 8, 0, 0, 0, 0, 0],
-    [7, 0, 0, 3, 0, 0, 5, 0, 0],
-    [0, 1, 0, 0, 5, 0, 7, 4, 0],
-    [1, 2, 6, 0, 0, 8, 0, 0, 4],
-    [0, 0, 0, 0, 0, 0, 8, 0, 0],
-    [5, 0, 3, 7, 0, 0, 1, 2, 9]
-];
-
-const initial = initial_easy1;
-ReactDOM.render(<SudokuBoard initial_values={initial} />, document.getElementById('root'))

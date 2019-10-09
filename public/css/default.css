@@ -1,0 +1,26 @@
+.sub-grid{
+    border:2px solid black;
+}
+
+.sub-grid div[data-subgrid-col="0"]{
+    border-right:1px solid black;
+    border-bottom:1px solid black;
+}
+.sub-grid div[data-subgrid-col="1"]{
+    border-right:1px solid black;
+    border-bottom:1px solid black;
+}
+
+
+.sub-grid div[data-subgrid-col="2"]{
+    border-bottom:1px solid black;
+}
+
+
+.sudoku-value-set {
+    font-size: xx-large;
+}
+
+.sudoku-initial-value{
+    color:blue;
+}
