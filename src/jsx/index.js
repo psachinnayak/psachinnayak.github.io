@@ -117,18 +117,42 @@
         });
         btnExecute.addEventListener('click', () => {
             execute();
-        })
-        slctPresets.addEventListener('change', () => {
-            let presetName = slctPresets.value;
-            if (presetName == 'custom') {
-                txtInitialValues.value = "custom";
-            } else {
-                txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
-            }
         });
-        byId("btnReset").addEventListener('click', ()=>{
+        byId("btnReset").addEventListener("click", () => {
+            solver = null;
+            while (holder.childNodes.length > 0) {
+                holder.removeChild(holder.childNodes[0]);
+            }
+            // If there is a timer clear timer also.
+
+            $('#sectionSetup').show();
+            setStepNumberText("Setup Step")
+            // setStepDetailsText(getTextForStep(-1));
+            $("#sectionSudokuBoard").collapse();
+            byId("sectionSetup").scrollIntoView();
 
         });
+
+        let btns = document.getElementsByClassName('btn-preset')
+        for (let idx = 0; idx < btns.length; idx++) {
+            console.log(btns[idx]);
+            btns[idx].addEventListener('click', (evt) => {
+
+                let presetName = evt.target.getAttribute("href").substr(1);
+                txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
+
+            })
+        }
+
+        // slctPresets.addEventListener('change', () => {
+        //     let presetName = slctPresets.value;
+        //     if (presetName == 'custom') {
+        //         txtInitialValues.value = "custom";
+        //     } else {
+        //         txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
+        //     }
+        // });
+
         btnInitiate.addEventListener('click', () => {
             $('#sectionSetup').collapse();
             setStepNumberText("Setup Step")
