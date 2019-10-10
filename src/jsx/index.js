@@ -1,6 +1,288 @@
-(function () {
+
+(function (window, document) {
+
+    var switchAutoplay, holder;
+
+    var solver = null, values, possibilities = null, initialValues = null;
+
+    let stepNumber = -1, is_solved = false, unsolvable = false;
+
+    function byId(id) {
+        return document.getElementById(id);
+    }
+    function create(tagName) {
+        return document.createElement(tagName);
+    }
+
+    function getGridId(row, col) {
+        return "grid_" + ((row - (row % 3)) / 3) + "_" + ((col - (col % 3)) / 3);
+    }
+    function generateBoard() {
+        for (let row = 0; row < 9; row++) {
+            let gridRow = create('div');
+
+            holder.appendChild(gridRow);
+            for (let col = 0; col < 9; col++) {
+
+                let cell = create("div");
+                cell.className = 'sudoku-cell';
+                if ((((row - (row % 3)) / 3) % 2) == 0 && (((col - (col % 3)) / 3) % 2) == 0) {
+
+                    cell.classList.add('sudoku-cell-alternate');
+                }
+                if (col % 3 == 0) {
+                    cell.classList.add("sudoku-cell-left-block-end");
+                }
+                if (row % 3 == 0) {
+                    cell.classList.add('sudoku-cell-top-block-end');
+                }
+                if (col == 8) {
+                    cell.classList.add('sudoku-cell-right-block-end');
+                }
+                if (row == 8) {
+                    cell.classList.add('sudoku-cell-bottom-block-end');
+                }
+                // sudoku-cell sudoku-cell-left-block-end sudoku-cell-top-block-end
+                cell.id = "cell_" + row + "_" + col;
+                // cell.appendChild(document.createTextNode(" "));
+                // subgrids[getGridId(row, col)].appendChild(cell);
+                gridRow.appendChild(cell);
+            }
+            let clearer = create("div");
+            clearer.className = 'clear';
+            gridRow.appendChild(clearer);
+        }
 
 
+    }
+    function setCellValue(row, column, value, isInitialValue = false) {
+        let cell = byId("cell_" + row + "_" + column);
+        while (cell.childNodes.length > 0) {
+            cell.removeChild(cell.childNodes[0]);
+        }
+        let cellValue = create("div");
+        cellValue.appendChild(document.createTextNode(value));
+        cellValue.className = "sudoku-cell-with-value";
+        if (isInitialValue) {
+            cellValue.classList.add("sudoku-cell-initial-value");
+        }
+        cell.appendChild(cellValue);
+
+        // cell.innerText = value;
+    }
+
+
+    function setPossibilities(row, column, possibilities) {
+        let cell = byId("cell_" + row + "_" + column);
+        // let oldPossibs = 0;
+        while (cell.childNodes.length > 0) {
+            cell.removeChild(cell.childNodes[0]);
+        }
+
+        for (let vals = 1; vals < 10; vals++) {
+
+            let possibl = create("div");
+            possibl.className = 'sudoku-cell-possibilities';
+
+            if (possibilities.indexOf(vals) == -1) {
+                possibl.classList.add('sudoku-cell-possibilities-hidden')
+            }
+
+            possibl.appendChild(document.createTextNode(vals));
+            cell.appendChild(possibl);
+        }
+
+    }
+
+
+    function flash(row, column, color) {
+        let cell = byId("cell_" + row + "_" + column);
+        let clsName = 'flash-' + color;
+        cell.classList.add(clsName);
+        setTimeout(function (cell, clsName) {
+            // debugger;
+            cell.classList.remove(clsName);
+        }.bind(null, cell, clsName), 300);
+    }
+    function attachHandlers() {
+
+        switchAutoplay = byId('switchAutoplay');
+        holder = byId("holder");
+        let btnNext = byId("btnNext"), slctPresets = byId('slctPresets'), btnExecute = byId('btnExecute');
+        let txtInitialValues = byId("txtInitialValues");
+        let btnInitiate = byId('btnInitiate');
+
+        btnNext.addEventListener('click', () => {
+            showNextStep();
+        });
+        btnExecute.addEventListener('click', () => {
+            execute();
+        })
+        slctPresets.addEventListener('change', () => {
+            let presetName = slctPresets.value;
+            if (presetName == 'custom') {
+                txtInitialValues.value = "custom";
+            } else {
+                txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
+            }
+        });
+        byId("btnReset").addEventListener('click', ()=>{
+
+        });
+        btnInitiate.addEventListener('click', () => {
+            $('#sectionSetup').collapse();
+            setStepNumberText("Setup Step")
+            setStepDetailsText(getTextForStep(-1));
+            $("#sectionSudokuBoard").show();
+            byId("sectionSudokuBoard").scrollIntoView();
+            generateBoard();
+            initialValues = JSON.parse(txtInitialValues.value);
+
+
+            values = initialValues.map((vals) => vals.map((single) => single));
+
+            solver = new SudokuSolver(values, (evtObject) => {
+                switch (evtObject.type) {
+                    case "modify-possibility":
+                        flash(evtObject.row, evtObject.column, 'orange');
+                        break;
+                    case "read":
+                        flash(evtObject.row, evtObject.column, 'blue');
+                        break;
+                    case "write":
+                        flash(evtObject.row, evtObject.column, 'red');
+                        break;
+                }
+
+            });
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (values[i][j]) {
+                        setCellValue(i, j, values[i][j], true);
+                    } else {
+                        setPossibilities(i, j, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                    }
+                }
+            }
+
+
+            possibilities = solver.defaultPossibilites();
+
+            // if (switchAutoplay.checked) {
+            //     setTimeout(execute, 5000);
+            // }
+            // }, 1000);
+        });
+    }
+
+    let tipStepNumber = 0;
+
+    function showNextStep() {
+        setStepNumberText(`Step ${(tipStepNumber % 7) + 1}`);
+        setStepDetailsText(getTextForStep(tipStepNumber % 7));
+        tipStepNumber++;
+    }
+    function execute() {
+        setStepNumberText(`Step ${(stepNumber % 7) + 1}`);
+        setStepDetailsText(getTextForStep(stepNumber % 7));
+        tipStepNumber = stepNumber;
+
+        solver.evaluationArrays.forEach((arr) => {
+            switch (stepNumber % 7) {
+                case 0:
+                    possibilities = solver.removeDuplicates(values, possibilities, arr);
+                    break;
+                case 1:
+                    possibilities = solver.isolateUniques(values, possibilities, arr);
+                    break;
+                case 2:
+                    // possibilities = solver.cleanPossibilitiesByUniqueDefinitions(values, possibilities, arr);
+                    possibilities = solver.findAndClearByNSizeDuplicatesInRow(values, possibilities, arr, 1);
+                    break;
+                case 3:
+                    possibilities = solver.findAndClearByNSizeDuplicatesInRow(values, possibilities, arr, 2);
+                    break;
+                case 4:
+                    possibilities = solver.findAndClearByNSizeDuplicatesInRow(values, possibilities, arr, 3);
+                    break;
+                case 5:
+                    possibilities = solver.findAndClearByNSizeDuplicatesInRow(values, possibilities, arr, 4);
+                    break;
+                case 6:
+                    // debugger;
+                    let preCountOfValues = solver.countNumberOfValues(values);
+                    values = solver.attemptToCalculateValues(values, possibilities);
+                    // solver.attemptToCalculateValues(solver.values, possibilities);
+                    let postCountOfValues = solver.countNumberOfValues(values);
+
+                    is_solved = (postCountOfValues == 81);
+                    console.log(postCountOfValues, preCountOfValues)
+                    unsolvable = (postCountOfValues == preCountOfValues);
+
+                    break;
+            }
+        });
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+
+                if (values[i][j]) {
+                    setCellValue(i, j, values[i][j], (values[i][j] == initialValues[i][j]));
+                } else {
+                    setPossibilities(i, j, possibilities[i][j]);
+                }
+            }
+        }
+
+        //  && !unsolvable
+        if (!is_solved) {
+            // if (switchAutoplay.checked) {
+            //     setTimeout(execute, 1000);
+            // }
+        } else {
+            // if (stepNumber < 50) {
+            //     setTimeout(execute, 1000);
+            // }
+            // debugger;
+            console.log("Is Solved", is_solved);
+            console.log("Unsolvable", unsolvable);
+        }
+        stepNumber++;
+
+    }
+
+
+    function setStepNumberText(txt) {
+        byId("spanStepNumber").innerText = txt;
+    }
+
+    window.addEventListener('load', () => {
+        attachHandlers();
+    });
+
+
+    function setStepDetailsText(txt) {
+        byId("spanStepDetails").innerText = txt;
+    }
+
+    function getTextForStep(stepNumber) {
+        let txt = null;
+
+        switch (stepNumber) {
+            case -1: txt = "Assign all the possible values (1,2,3,4,5,6,7,8,9) to the cells where the value is not known"; break;
+            case 0: txt = "Check all the known values, and remove those possibilities from unknown cells. Why : since the value is present in either the row / column / subgrid those values cannot exist in the unknown cells"; break;
+            case 1: txt = "Check all rows, columns and sub grids to identify the possibilities which exist only once. Why : Since the possibilities are possible only in one cell, that possible value is unique."; break;
+            case 2: txt = ""; break;
+            case 3: txt = ""; break;
+            case 4: txt = ""; break;
+            case 5: txt = ""; break;
+            case 6: txt = "In the cells which have only one possibility, set the value to that possibility."; break;
+        }
+        return txt;
+    }
+
+    function getInitialValues(presetName) {
+        return sampleData[presetName];
+    }
     const sampleData = {
         initial_easy1: [
             [3, 0, 6, 5, 0, 8, 4, 0, 0],
@@ -113,23 +395,6 @@
             [0, 0, 0, 0, 0, 0, 0, 0, 5],
             [1, 0, 8, 4, 0, 0, 0, 0, 0]
         ]
-    }
-    const dropDown = document.getElementById('slctInitialData');
-    const txtInitialValues = document.getElementById("txtInitialValues");
-    const btnLoadInitialData = document.getElementById('btnLoadInitialData');
-    dropDown.addEventListener("change", () => {
-        if (dropDown.value != "initial_custom") {
-            txtInitialValues.innerText = JSON.stringify(sampleData[dropDown.value]);
-        }
-    });
-    txtInitialValues.innerText = JSON.stringify(sampleData[dropDown.value]);
+    };
 
-    btnLoadInitialData.addEventListener('click', () => {
-        // debugger;
-        let data = JSON.parse(txtInitialValues.value);
-        ReactDOM.render(<SudokuBoard initial_values={data} />, document.getElementById('root'))
-    });
-})()
-
-
-
+})(window, document)
