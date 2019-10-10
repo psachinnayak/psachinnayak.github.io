@@ -92,6 +92,11 @@
         .flash-blue {
             background-color: blue;
         }
+
+        .instructions {
+            width: 50%;
+            margin: 0px auto;
+        }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -104,14 +109,14 @@
 <body class=" bg-light">
     <main role="main">
 
-        <div class="container album  bg-dark">
-            <h1>Visual Sudoku Solver</h1>
+        <div class="container-fluid  bg-dark">
+            <h1 style="color: white;">Sudoku Solver with visual cues</h1>
 
             <div class="accordion" id="accordionParent">
                 <div class="card">
                     <div class="card-header" id="divSetupInstructionsHeader">
                         <h2 class="mb-0">
-                            Instantiate Sudoku Board
+                            Setup the Sudoku Board
                             <!-- <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#sectionSetup"
                             aria-expanded="false" aria-controls="sectionSetup"></button> -->
                         </h2>
@@ -119,29 +124,80 @@
                     <div class="collapse show" id="sectionSetup" aria-labelledby="divSetupInstructionsHeader"
                         data-parent="#accordionParent">
                         <div class="card-body" style="text-align: top">
-                            <p class="card-text">
-                                Provide an array of Sudoku to be solved. Use 0 to indicate the unknowns. Or select one
-                                from
-                                the defaults / presets provided below.
-                            </p>
-                            <!-- <p>Select a preset below or provide a Sudoku to solve:</p> -->
-                            <label for="presets">Presets :</label>
-                            <select name="presets" id="slctPresets">
-                                <option value="initial_easy1" selected>Easy 1</option>
-                                <option value="initial_easy2">Easy 2</option>
-                                <option value="initial_medium1">Medium 1</option>
-                                <option value="initial_medium2">Medium 2</option>
-                                <option value="initial_medium3">Medium 3</option>
-                                <option value="initial_medium4">Medium 4</option>
-                                <option value="initial_hard1">Hard 1</option>
-                                <option value="initial_hard2">Hard 2</option>
-                                <option value="initial_expert1">Expert 1</option>
-                                <option value="initial_expert2">Expert 2</option>
-                                <option value="custom">Custom</option>
-                            </select>
-                            <em>OR</em>
-                            <!-- <p>Provide your own:</p> -->
-                            <textarea id="txtInitialValues" cols="25" rows="10">[
+                            <div class="instructions">
+                                </p>
+                                <p class="lead">Setup the Sudoku Board by providing an array of Sudoku to be solved. Use
+                                    0 to indicate the unknowns. Or select
+                                    one
+                                    from
+                                    the defaults / presets provided below.
+                                </p>
+                                <!-- <p>Select a preset below or provide a Sudoku to solve:</p> -->
+                                <label for="presets">Presets :</label>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        Easy Presets
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Easy 1</a>
+                                        <a class="dropdown-item" href="#">Easy 2</a>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        Medium Presets
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Medium 1</a>
+                                        <a class="dropdown-item" href="#">Medium 2</a>
+                                        <a class="dropdown-item" href="#">Medium 3</a>
+                                        <a class="dropdown-item" href="#">Medium 4</a>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        Hard Presets
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Hard 1</a>
+                                        <a class="dropdown-item" href="#">Hard 2</a>
+                                        <!-- <div class="dropdown-divider"></div>
+                                          <a class="dropdown-item" href="#">Expert 1 (not solvable)</a>
+                                          <a class="dropdown-item" href="#">Expert 2 (not solvable)</a> -->
+                                    </div>
+                                </div>
+                                <!-- <div class="btn-group">
+                                    <button type="button" disabled class="btn btn-danger dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Expert Presets
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Expert 1</a>
+                                        <a class="dropdown-item" href="#">Expert 2</a>
+                                         <div class="dropdown-divider"></div>
+                                              <a class="dropdown-item" href="#">Expert 1 (not solvable)</a>
+                                              <a class="dropdown-item" href="#">Expert 2 (not solvable)</a> 
+                                    </div>
+                                </div> -->
+                                <select name="presets" id="slctPresets">
+                                    <option value="initial_easy1" selected>Easy 1</option>
+                                    <option value="initial_easy2">Easy 2</option>
+                                    <option value="initial_medium1">Medium 1</option>
+                                    <option value="initial_medium2">Medium 2</option>
+                                    <option value="initial_medium3">Medium 3</option>
+                                    <option value="initial_medium4">Medium 4</option>
+                                    <option value="initial_hard1">Hard 1</option>
+                                    <option value="initial_hard2">Hard 2</option>
+                                    <option value="initial_expert1">Expert 1</option>
+                                    <option value="initial_expert2">Expert 2</option>
+                                    <option value="custom">Custom</option>
+                                </select><br>
+                                <em>OR</em><br>
+                                <!-- <p>Provide your own:</p> -->
+                                <textarea id="txtInitialValues" cols="25" rows="5">[
                             [2,0,0,0,7,0,0,0,5],
                             [0,7,0,5,0,4,0,1,0],
                             [0,0,5,0,1,0,7,0,0],
@@ -153,12 +209,13 @@
                             [1,0,0,0,0,0,0,0,3]
                             ]
                             </textarea>
-                            <!-- <br /> -->
-                            <div style="text-align:center;width:100%">
-                                <button id="btnInitiate" data-toggle="collapse" data-target="#sectionSudokuBoard"
-                                    class="btn btn-primary">Instantiate</button>
+                                <!-- <br /> -->
+                                <div style="text-align:center;width:100%">
+                                    <button id="btnInitiate" data-toggle="collapse" data-target="#sectionSudokuBoard"
+                                        class="btn btn-primary">Instantiate</button>
+                                </div>
+                                <br />
                             </div>
-                            <br />
                         </div>
                     </div>
                 </div>
@@ -169,37 +226,27 @@
                     </div>
                     <div class="card-body collapse" id="sectionSudokuBoard">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-7">
                                 <div id='holder' class="container"></div>
                             </div>
-                            <div class="col-4">
-                                <div class="card">
-                                    <div class="card-header">Controller</div>
-                                    <div class="card-body">
-                                        <div class="btn-group">
-                                            <button role="button" id="btnNext" class="btn btn-lg btn-primary">Next
-                                                Step</button><br />
-                                            <button role="button" id="btnReset" class="btn btn-lg btn-secondary">Reset
-                                                Board</button><br />
-                                        </div>
-                                        <!-- <button role="button" class="btn btn-lg btn-block btn-secondary"
-                                                data-toggle="button" aria-pressed="false" autocomplete="false">AutoPlay</button> -->
-                                        <!-- <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" id="switchAutoplay">
-                                                <label class="custom-control-label" for="switchAutoplay">Autoplay</label>
-                                            </div> -->
-
-                                    </div>
-                                </div>
-                                <br />
+                            <div class="col-5">
                                 <div class="card">
                                     <div class="card-header">
                                         <h3 id="spanStepNumber">Step 1</h3>
                                     </div>
-                                    <div class="card-body" id="spanStepDetails"></div>
-                                    <div>
-                                        <button id="btnExecute" role="button" class="btn btn-primary">Execute
-                                            Step</button>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-center">
+                                            <button id="btnExecute" role="button" class="btn btn-primary">Execute
+                                                Step</button>&nbsp;
+                                            <button role="button" id="btnNext" class="btn btn-primary">Next
+                                                Step</button>&nbsp;
+                                            <button role="button" id="btnReset" class="btn btn-secondary">Reset
+                                                Board</button>&nbsp;
+
+                                        </div>
+                                        <br>
+                                        <div id="spanStepDetails"></div>
+
                                     </div>
                                 </div>
 
