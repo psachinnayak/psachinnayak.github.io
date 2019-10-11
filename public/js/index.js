@@ -25,12 +25,16 @@
     function generateBoard() {
         for (var row = 0; row < 9; row++) {
             var gridRow = create('div');
-
+            gridRow.className = "row";
             holder.appendChild(gridRow);
+            var pad = create("div");
+            pad.className = "col-1";
+            gridRow.appendChild(pad);
+
             for (var col = 0; col < 9; col++) {
 
                 var cell = create("div");
-                cell.className = 'sudoku-cell';
+                cell.className = 'sudoku-cell col-1';
                 if ((row - row % 3) / 3 % 2 == 0 && (col - col % 3) / 3 % 2 == 0) {
 
                     cell.classList.add('sudoku-cell-alternate');
@@ -53,9 +57,12 @@
                 // subgrids[getGridId(row, col)].appendChild(cell);
                 gridRow.appendChild(cell);
             }
-            var clearer = create("div");
-            clearer.className = 'clear';
-            gridRow.appendChild(clearer);
+            pad = create("div");
+            pad.className = "col-1";
+            gridRow.appendChild(pad);
+            pad = create("div");
+            pad.className = "col-1";
+            gridRow.appendChild(pad);
         }
     }
     function setCellValue(row, column, value) {
@@ -83,17 +90,26 @@
             cell.removeChild(cell.childNodes[0]);
         }
 
+        var cntr = create('div');
+        cntr.className = 'row';
+        cell.appendChild(cntr);
+        // let gridRow = null;
         for (var vals = 1; vals < 10; vals++) {
-
-            var possibl = create("div");
+            var possibl = create("span");
             possibl.className = 'sudoku-cell-possibilities';
+            possibl.style.float = 'left';
 
             if (possibilities.indexOf(vals) == -1) {
                 possibl.classList.add('sudoku-cell-possibilities-hidden');
             }
 
             possibl.appendChild(document.createTextNode(vals));
-            cell.appendChild(possibl);
+            cntr.appendChild(possibl);
+            // if (vals % 3 == 0) {
+            //     let tmp = create("span");
+            //     tmp.className = 'clear';
+            //     cntr.appendChild(tmp);
+            // }
         }
     }
 

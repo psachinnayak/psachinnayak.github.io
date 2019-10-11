@@ -44,9 +44,9 @@
         }
 
         .sudoku-cell-with-value {
-            width: 100%;
-            text-align: center;
-            font-size: xx-large;
+            /* width: 100%; */
+            /* text-align: center; */
+            /* font-size: xx-large; */
             color: blue;
         }
 
@@ -58,11 +58,11 @@
         .sudoku-cell {
             border-left: 1px solid rgb(167, 167, 167);
             border-top: 1px solid rgb(167, 167, 167);
-            float: left;
-            width: 60px;
-            height: 60px;
-            vertical-align: middle;
-            padding: 5px;
+            /* float: left; */
+            /* width: 60px; */
+            /* height: 60px; */
+            /* vertical-align: middle; */
+            /* padding: 5px; */
             /* padding: 15px; */
         }
 
@@ -71,10 +71,11 @@
         }
 
         .sudoku-cell-possibilities {
-            min-width: 3px;
-            width: 33%;
+            font-size:0.5rem;
+            /* min-width: 3px; */
+            /* width: 33%; */
             float: left;
-            font-size: smaller;
+            /* font-size: smaller; */
         }
 
         .sudoku-cell-left-block-end {
@@ -125,7 +126,7 @@
 <body class=" bg-light">
     <main role="main" class="full-height">
 
-        <div class="container-fluid  bg-dark full-height">
+        <div class="container  bg-dark full-height">
             <h1 style="color: white;">Sudoku Solver with visual cues</h1>
 
             <div class="accordion" id="accordionParent">
@@ -139,8 +140,8 @@
                     </div>
                     <div class="collapse show" id="sectionSetup" aria-labelledby="divSetupInstructionsHeader"
                         data-parent="#accordionParent">
-                        <div class="card-body" style="text-align: top">
-                            <div class="instructions">
+                        <div class="card-body row" style="text-align: top">
+                            <div class="instructions col-lg-8 col-sm-12">
                                 </p>
                                 <p class="lead">Setup the Sudoku Board by providing an array of Sudoku to be solved. Use
                                     0 to indicate the unknowns. Or select
@@ -149,7 +150,7 @@
                                     the defaults / presets provided below.
                                 </p>
                                 <!-- <p>Select a preset below or provide a Sudoku to solve:</p> -->
-                                <label for="presets">Presets :</label>
+                                <label for="presets">Presets :</label><br/>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
@@ -233,10 +234,10 @@
                     </div>
                     <div class="card-body collapse" id="sectionSudokuBoard">
                         <div class="row">
-                            <div class="col-7">
-                                <div id='holder' class="container"></div>
+                            <div class="col-lg-7 col-sm-12">
+                                <div id='holder'></div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-lg-5 col-sm-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <h3 id="spanStepNumber">Step 1</h3>
