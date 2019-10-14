@@ -5,7 +5,7 @@
 
     var solver = null, values, possibilities = null, initialValues = null;
 
-    let stepNumber = -1, is_solved = false, unsolvable = false;
+    let stepNumber = 0, is_solved = false, unsolvable = false;
 
     function byId(id) {
         return document.getElementById(id);
@@ -20,7 +20,7 @@
     function generateBoard() {
         for (let row = 0; row < 9; row++) {
             let gridRow = create('div');
-            gridRow.style.clear="left";
+            gridRow.style.clear = "left";
             // gridRow.className = "row";
             holder.appendChild(gridRow);
             // for (let i = 0; i < 1; i++) {
@@ -180,11 +180,12 @@
 
         btnInitiate.addEventListener('click', () => {
             $('#sectionSetup').collapse();
-            setStepNumberText("Setup Step")
-            setStepDetailsText(getTextForStep(-1));
+            // setStepNumberText("Setup Step")
+            // setStepDetailsText(getTextForStep(-1));
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
             generateBoard();
+            displaySetupInstructions();
             initialValues = JSON.parse(txtInitialValues.value);
 
 
@@ -224,17 +225,18 @@
         });
     }
 
-    let tipStepNumber = 0;
+    // let tipStepNumber = 1;
 
-    function showNextStep() {
-        setStepNumberText(`Step ${(tipStepNumber % 7) + 1}`);
-        setStepDetailsText(getTextForStep(tipStepNumber % 7));
-        tipStepNumber++;
-    }
+    // function showNextStep() {
+    //     setStepNumberText(`Step ${(tipStepNumber % 7) + 1}`);
+    //     setStepDetailsText(getTextForStep(tipStepNumber % 7));
+    //     tipStepNumber++;
+    // }
     function execute() {
         setStepNumberText(`Step ${(stepNumber % 7) + 1}`);
         setStepDetailsText(getTextForStep(stepNumber % 7));
-        tipStepNumber = stepNumber;
+        setNextStepDetailsText(getTextForStep((stepNumber - 1) % 7));
+        // tipStepNumber = stepNumber;
 
         solver.evaluationArrays.forEach((arr) => {
             switch (stepNumber % 7) {
@@ -312,12 +314,17 @@
     function setStepDetailsText(txt) {
         byId("spanStepDetails").innerText = txt;
     }
+    function setNextStepDetailsText(txt) {
+        byId("spanNextStepDetails").innerText = txt;
+    }
 
+    function displaySetupInstructions() {
+        $('#initialSetupModal').modal();
+    }
     function getTextForStep(stepNumber) {
         let txt = null;
 
         switch (stepNumber) {
-            case -1: txt = "Assign all the possible values (1,2,3,4,5,6,7,8,9) to the cells where the value is not known"; break;
             case 0: txt = "Check all the known values, and remove those possibilities from unknown cells. Why : since the value is present in either the row / column / subgrid those values cannot exist in the unknown cells"; break;
             case 1: txt = "Check all rows, columns and sub grids to identify the possibilities which exist only once. Why : Since the possibilities are possible only in one cell, that possible value is unique."; break;
             case 2: txt = ""; break;

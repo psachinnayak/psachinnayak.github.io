@@ -60,7 +60,7 @@
             border-left: 1px solid rgb(167, 167, 167);
             border-top: 1px solid rgb(167, 167, 167);
             padding: 2px;
-            float:left;
+            float: left;
             width: 35px;
             height: 35px;
             text-align: center;
@@ -90,7 +90,7 @@
 
         .sudoku-cell-right-block-end {
             border-right: 1px solid black;
-            clear:right;
+            clear: right;
         }
 
         .sudoku-cell-bottom-block-end {
@@ -121,8 +121,17 @@
         p {
             margin-block-start: 3rem;
         }
-        #spanStepDetails{
-            height:100px;
+
+        #spanStepDetails {
+            height: 100px;
+        }
+
+        .modal-title {
+            font-weight: bold;
+        }
+
+        .btn-group {
+            margin-top: 10px;
         }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -168,48 +177,49 @@
                                     known values, set the value to the number (1 to 9). For all the unknown
                                     values set the value to zero (0). <br><br> <em>
                                 </p>
-                                <p><b><em>Example : </em> </b>For <a
-                                        href="public/images/sudoku-resized.png"
+                                <p><b><em>Example : </em> </b>For <a href="public/images/sudoku-resized.png"
                                         target="blank">this sample puzzle</a> the initial values would be :
                                     [[3,0,6,5,0,8,4,0,0],[5,2,0,0,0,0,0,0,0],[0,8,7,0,0,0,0,3,1],[0,0,3,0,1,0,0,8,0],[9,0,0,8,6,3,0,0,5],[0,5,0,0,9,0,6,0,0],[1,3,0,0,0,0,2,5,0],[0,0,0,0,0,0,0,7,4],[0,0,5,2,0,6,3,0,0]]
                                 </p>
                                 <p>Do not have any Sudoku readily available?</em> select any preset from the ones
                                     available below.</p>
                                 <em>Presets :</em><br />
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Easy Presets
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item btn-preset" href="#initial_easy1">Easy 1</a>
-                                        <a class="dropdown-item btn-preset" href="#initial_easy2">Easy 2</a>
+                                <div style="text-align: center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-success dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Easy Presets
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item btn-preset" href="#initial_easy1">Easy 1</a>
+                                            <a class="dropdown-item btn-preset" href="#initial_easy2">Easy 2</a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Medium Presets
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item btn-preset" href="#initial_medium1">Medium 1</a>
-                                        <a class="dropdown-item btn-preset" href="#initial_medium2">Medium 2</a>
-                                        <a class="dropdown-item btn-preset" href="#initial_medium3">Medium 3</a>
-                                        <a class="dropdown-item btn-preset" href="#initial_medium4">Medium 4</a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-warning dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Medium Presets
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item btn-preset" href="#initial_medium1">Medium 1</a>
+                                            <a class="dropdown-item btn-preset" href="#initial_medium2">Medium 2</a>
+                                            <a class="dropdown-item btn-preset" href="#initial_medium3">Medium 3</a>
+                                            <a class="dropdown-item btn-preset" href="#initial_medium4">Medium 4</a>
 
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Hard Presets
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item btn-preset" href="#initial_hard1">Hard 1</a>
-                                        <a class="dropdown-item btn-preset" href="#initial_hard2">Hard 2</a>
-                                        <!-- <div class="dropdown-divider"></div>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Hard Presets
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item btn-preset" href="#initial_hard1">Hard 1</a>
+                                            <a class="dropdown-item btn-preset" href="#initial_hard2">Hard 2</a>
+                                            <!-- <div class="dropdown-divider"></div>
                                           <a class="dropdown-item" href="#">Expert 1 (not solvable)</a>
                                           <a class="dropdown-item" href="#">Expert 2 (not solvable)</a> -->
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- <div class="btn-group">
@@ -269,7 +279,7 @@
                                     </div>
                                     <div class="card-body">
                                         <br>
-                                        <div id="spanStepDetails" style="overflow: auto"></div>
+                                        <div id="spanNextStepDetails" style="overflow: auto"></div>
 
 
                                         <div class="d-flex justify-content-center">
@@ -277,10 +287,19 @@
                                                 Step</button>&nbsp;
                                             <!-- <button role="button" id="btnNext" class="btn btn-primary">Next
                                                 Step</button>&nbsp; -->
-                                            <button role="button" id="btnReset" class="btn btn-secondary">Reset
+                                            <button role="button" id="btnReset" class="btn btn-danger">Reset
                                                 Board</button>&nbsp;
-
                                         </div>
+
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>Previous Step</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="spanStepDetails" style="overflow: auto"></div>
+
                                     </div>
                                 </div>
 
@@ -305,9 +324,32 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     </main>
     <br><span class="clear">&nbsp;</span>
 
+    <!-- Modal -->
+    <div class="modal fade" id="initialSetupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Setup - Assign default values</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    As a part of the first step, assign all the possible values (1,2,3,4,5,6,7,8,9) to the cells where
+                    the value is not known
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

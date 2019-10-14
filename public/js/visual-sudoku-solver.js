@@ -8,7 +8,7 @@
         possibilities = null,
         initialValues = null;
 
-    var stepNumber = -1,
+    var stepNumber = 0,
         is_solved = false,
         unsolvable = false;
 
@@ -180,11 +180,12 @@
 
         btnInitiate.addEventListener('click', function () {
             $('#sectionSetup').collapse();
-            setStepNumberText("Setup Step");
-            setStepDetailsText(getTextForStep(-1));
+            // setStepNumberText("Setup Step")
+            // setStepDetailsText(getTextForStep(-1));
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
             generateBoard();
+            displaySetupInstructions();
             initialValues = JSON.parse(txtInitialValues.value);
 
             values = initialValues.map(function (vals) {
@@ -225,17 +226,18 @@
         });
     }
 
-    var tipStepNumber = 0;
+    // let tipStepNumber = 1;
 
-    function showNextStep() {
-        setStepNumberText("Step " + (tipStepNumber % 7 + 1));
-        setStepDetailsText(getTextForStep(tipStepNumber % 7));
-        tipStepNumber++;
-    }
+    // function showNextStep() {
+    //     setStepNumberText(`Step ${(tipStepNumber % 7) + 1}`);
+    //     setStepDetailsText(getTextForStep(tipStepNumber % 7));
+    //     tipStepNumber++;
+    // }
     function execute() {
         setStepNumberText("Step " + (stepNumber % 7 + 1));
         setStepDetailsText(getTextForStep(stepNumber % 7));
-        tipStepNumber = stepNumber;
+        setNextStepDetailsText(getTextForStep((stepNumber - 1) % 7));
+        // tipStepNumber = stepNumber;
 
         solver.evaluationArrays.forEach(function (arr) {
             switch (stepNumber % 7) {
@@ -310,13 +312,17 @@
     function setStepDetailsText(txt) {
         byId("spanStepDetails").innerText = txt;
     }
+    function setNextStepDetailsText(txt) {
+        byId("spanNextStepDetails").innerText = txt;
+    }
 
+    function displaySetupInstructions() {
+        $('#initialSetupModal').modal();
+    }
     function getTextForStep(stepNumber) {
         var txt = null;
 
         switch (stepNumber) {
-            case -1:
-                txt = "Assign all the possible values (1,2,3,4,5,6,7,8,9) to the cells where the value is not known";break;
             case 0:
                 txt = "Check all the known values, and remove those possibilities from unknown cells. Why : since the value is present in either the row / column / subgrid those values cannot exist in the unknown cells";break;
             case 1:
