@@ -25,8 +25,9 @@
     function generateBoard() {
         for (var row = 0; row < 9; row++) {
             var gridRow = create('div');
-            gridRow.style.clear = "left";
-            // gridRow.className = "row";
+            gridRow.style.margin = "0px auto";
+            gridRow.style.width = "243px";
+
             holder.appendChild(gridRow);
             // for (let i = 0; i < 1; i++) {
             //     let pad = create("div");
@@ -62,9 +63,9 @@
                 // subgrids[getGridId(row, col)].appendChild(cell);
                 gridRow.appendChild(cell);
             }
-            // pad = create("div");
-            // pad.style.clear = "left";
-            // gridRow.appendChild(pad);
+            var pad = create("div");
+            pad.style.clear = "both";
+            gridRow.appendChild(pad);
             // pad = create("div");
             // pad.className = "col-1";
             // gridRow.appendChild(pad);
