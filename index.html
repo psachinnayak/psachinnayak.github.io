@@ -18,7 +18,7 @@
     <meta name="author" content="Sachin Nayak (https://blog.sachinnayak.info/)">
     <link rel="shortcut icon" href="//blog.sachinnayak.info/favicon.png" type="image/png" />
     <title>Visual Sudoku Solver</title>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> -->
     <script src="public/js/SudokuSolver.js"></script>
     <style>
         body,
@@ -44,38 +44,36 @@
         }
 
         .sudoku-cell-with-value {
-            /* width: 100%; */
-            /* text-align: center; */
-            /* font-size: xx-large; */
             color: blue;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            /* margin:0px auto; */
         }
 
         .sudoku-cell-initial-value {
             color: black;
-            /* background-color:gray; */
         }
 
         .sudoku-cell {
             border-left: 1px solid rgb(167, 167, 167);
             border-top: 1px solid rgb(167, 167, 167);
-            /* float: left; */
-            /* width: 60px; */
-            /* height: 60px; */
-            /* vertical-align: middle; */
-            /* padding: 5px; */
-            /* padding: 15px; */
+            padding: 2px;
+            float:left;
+            width: 35px;
+            height: 35px;
+            text-align: center;
         }
 
         .sudoku-cell-alternate {
-            background-color: rgb(250, 250, 250);
+            background-color: rgb(220, 220, 220);
         }
 
         .sudoku-cell-possibilities {
-            font-size:0.5rem;
-            /* min-width: 3px; */
-            /* width: 33%; */
+            font-size: 0.45rem;
+            width: 33%;
             float: left;
-            /* font-size: smaller; */
         }
 
         .sudoku-cell-left-block-end {
@@ -92,6 +90,7 @@
 
         .sudoku-cell-right-block-end {
             border-right: 1px solid black;
+            clear:right;
         }
 
         .sudoku-cell-bottom-block-end {
@@ -114,6 +113,17 @@
             width: 50%;
             margin: 0px auto;
         }
+
+        .spanIntroduction {
+            color: white;
+        }
+
+        p {
+            margin-block-start: 3rem;
+        }
+        #spanStepDetails{
+            height:100px;
+        }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -126,31 +136,46 @@
 <body class=" bg-light">
     <main role="main" class="full-height">
 
-        <div class="container  bg-dark full-height">
+        <div class="container-fluid  bg-dark full-height">
             <h1 style="color: white;">Sudoku Solver with visual cues</h1>
-
+            <section class="spanIntroduction">
+                <p>An attempt to visually depict logic of solving a Sudoku problem. Why this was written is explained in
+                    this blog post <a href="https://blog.sachinnayak.info/learning-to-solve-sudoku">here</a></p>
+            </section>
             <div class="accordion" id="accordionParent">
                 <div class="card">
                     <div class="card-header" id="divSetupInstructionsHeader">
-                        <h2 class="mb-0">
-                            Setup the Sudoku Board
+                        <h6 class="mb-0 text-muted">
+                            Setup the Sudoku Game
                             <!-- <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#sectionSetup"
                             aria-expanded="false" aria-controls="sectionSetup"></button> -->
-                        </h2>
+                        </h6>
                     </div>
                     <div class="collapse show" id="sectionSetup" aria-labelledby="divSetupInstructionsHeader"
                         data-parent="#accordionParent">
                         <div class="card-body row" style="text-align: top">
                             <div class="instructions col-lg-8 col-sm-12">
                                 </p>
-                                <p class="lead">Setup the Sudoku Board by providing an array of Sudoku to be solved. Use
-                                    0 to indicate the unknowns. Or select
-                                    one
-                                    from
-                                    the defaults / presets provided below.
+                                <p>
+                                    To solve a Sudoku Game which you have, provide a 2 dimensional (9x9) array.
+                                    <!-- 
+                                    (<small>[[&lt;1st row data&gt;],[&lt;2nd row data&gt;],[&lt;3rd row
+                                        data&gt;],[&lt;4th
+                                        row data&gt;],[&lt;5th row data&gt;],[&lt;6th row data&gt;],[&lt;7th row
+                                        data&gt;],[&lt;8th row data&gt;],[&lt;9th row data&gt;]]</small>).
+                                     -->
+                                    For all the
+                                    known values, set the value to the number (1 to 9). For all the unknown
+                                    values set the value to zero (0). <br><br> <em>
                                 </p>
-                                <!-- <p>Select a preset below or provide a Sudoku to solve:</p> -->
-                                <label for="presets">Presets :</label><br/>
+                                <p><b><em>Example : </em> </b>For <a
+                                        href="https://blog.sachinnayak.info/content/images/2019/10/Screenshot-2019-10-14-at-7.23.01-AM.png"
+                                        target="blank">this sample puzzle</a> the initial values would be :
+                                    [[3,0,6,5,0,8,4,0,0],[5,2,0,0,0,0,0,0,0],[0,8,7,0,0,0,0,3,1],[0,0,3,0,1,0,0,8,0],[9,0,0,8,6,3,0,0,5],[0,5,0,0,9,0,6,0,0],[1,3,0,0,0,0,2,5,0],[0,0,0,0,0,0,0,7,4],[0,0,5,2,0,6,3,0,0]]
+                                </p>
+                                <p>Do not have any Sudoku readily available?</em> select any preset from the ones
+                                    available below.</p>
+                                <em>Presets :</em><br />
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
@@ -180,9 +205,9 @@
                                         Hard Presets
                                     </button>
                                     <div class="dropdown-menu">
-                                            <a class="dropdown-item btn-preset" href="#initial_hard1">Hard 1</a>
-                                            <a class="dropdown-item btn-preset" href="#initial_hard2">Hard 2</a>
-                                            <!-- <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item btn-preset" href="#initial_hard1">Hard 1</a>
+                                        <a class="dropdown-item btn-preset" href="#initial_hard2">Hard 2</a>
+                                        <!-- <div class="dropdown-divider"></div>
                                           <a class="dropdown-item" href="#">Expert 1 (not solvable)</a>
                                           <a class="dropdown-item" href="#">Expert 2 (not solvable)</a> -->
                                     </div>
@@ -230,7 +255,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h3>Sudoku Board</h3>
+                        <h6 class=" text-muted">Sudoku Board</h6>
                     </div>
                     <div class="card-body collapse" id="sectionSudokuBoard">
                         <div class="row">
@@ -243,18 +268,19 @@
                                         <h3 id="spanStepNumber">Step 1</h3>
                                     </div>
                                     <div class="card-body">
+                                        <br>
+                                        <div id="spanStepDetails" style="overflow: auto"></div>
+
+
                                         <div class="d-flex justify-content-center">
                                             <button id="btnExecute" role="button" class="btn btn-primary">Execute
                                                 Step</button>&nbsp;
-                                            <button role="button" id="btnNext" class="btn btn-primary">Next
-                                                Step</button>&nbsp;
+                                            <!-- <button role="button" id="btnNext" class="btn btn-primary">Next
+                                                Step</button>&nbsp; -->
                                             <button role="button" id="btnReset" class="btn btn-secondary">Reset
                                                 Board</button>&nbsp;
 
                                         </div>
-                                        <br>
-                                        <div id="spanStepDetails"></div>
-
                                     </div>
                                 </div>
 
@@ -267,7 +293,9 @@
             </div>
 
 
+
         </div>
+        <br><span class="clear">&nbsp;</span>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -278,6 +306,8 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     </main>
+    <br><span class="clear">&nbsp;</span>
+
 </body>
 
 </html>

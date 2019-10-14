@@ -25,18 +25,23 @@
     function generateBoard() {
         for (var row = 0; row < 9; row++) {
             var gridRow = create('div');
-            gridRow.className = "row";
+            gridRow.style.clear = "left";
+            // gridRow.className = "row";
             holder.appendChild(gridRow);
-            var pad = create("div");
-            pad.className = "col-1";
-            gridRow.appendChild(pad);
-
+            // for (let i = 0; i < 1; i++) {
+            //     let pad = create("div");
+            //     pad.className = "col-1";
+            //     gridRow.appendChild(pad);
+            // }
             for (var col = 0; col < 9; col++) {
 
                 var cell = create("div");
-                cell.className = 'sudoku-cell col-1';
+                cell.className = 'sudoku-cell';
                 if ((row - row % 3) / 3 % 2 == 0 && (col - col % 3) / 3 % 2 == 0) {
+                    cell.classList.add('sudoku-cell-alternate');
+                }
 
+                if (((row - row % 3) / 3 == 1 && (col - col % 3) / 3) == 1) {
                     cell.classList.add('sudoku-cell-alternate');
                 }
                 if (col % 3 == 0) {
@@ -57,12 +62,12 @@
                 // subgrids[getGridId(row, col)].appendChild(cell);
                 gridRow.appendChild(cell);
             }
-            pad = create("div");
-            pad.className = "col-1";
-            gridRow.appendChild(pad);
-            pad = create("div");
-            pad.className = "col-1";
-            gridRow.appendChild(pad);
+            // pad = create("div");
+            // pad.style.clear = "left";
+            // gridRow.appendChild(pad);
+            // pad = create("div");
+            // pad.className = "col-1";
+            // gridRow.appendChild(pad);
         }
     }
     function setCellValue(row, column, value) {
@@ -73,7 +78,9 @@
             cell.removeChild(cell.childNodes[0]);
         }
         var cellValue = create("div");
-        cellValue.appendChild(document.createTextNode(value));
+        var cellSpan = create("span");
+        cellSpan.appendChild(document.createTextNode(value));
+        cellValue.appendChild(cellSpan);
         cellValue.className = "sudoku-cell-with-value";
         if (isInitialValue) {
             cellValue.classList.add("sudoku-cell-initial-value");
@@ -91,7 +98,7 @@
         }
 
         var cntr = create('div');
-        cntr.className = 'row';
+        // cntr.className = 'row';
         cell.appendChild(cntr);
         // let gridRow = null;
         for (var vals = 1; vals < 10; vals++) {
@@ -132,9 +139,9 @@
         var txtInitialValues = byId("txtInitialValues");
         var btnInitiate = byId('btnInitiate');
 
-        btnNext.addEventListener('click', function () {
-            showNextStep();
-        });
+        // btnNext.addEventListener('click', () => {
+        //     showNextStep();
+        // });
         btnExecute.addEventListener('click', function () {
             execute();
         });
