@@ -1,7 +1,6 @@
-
 (function (window, document) {
 
-    var switchAutoplay, holder;
+    var holder = null;
 
     var solver = null,
         values,
@@ -11,6 +10,7 @@
     var stepNumber = 0,
         is_solved = false,
         unsolvable = false;
+    var maxStepsCount = 8;
 
     function byId(id) {
         return document.getElementById(id);
@@ -26,16 +26,13 @@
         for (var row = 0; row < 9; row++) {
             var gridRow = create('div');
             gridRow.style.margin = "0px auto";
-            gridRow.style.width = "243px";
+            gridRow.style.width = "300px";
 
             holder.appendChild(gridRow);
-            // for (let i = 0; i < 1; i++) {
-            //     let pad = create("div");
-            //     pad.className = "col-1";
-            //     gridRow.appendChild(pad);
-            // }
+            // let rowNumb = create('span');
+            // rowNumb.appendChild(document.createTextNode(`Row ${row + 1}`))
+            // gridRow.appendChild(rowNumb);
             for (var col = 0; col < 9; col++) {
-
                 var cell = create("div");
                 cell.className = 'sudoku-cell';
                 if ((row - row % 3) / 3 % 2 == 0 && (col - col % 3) / 3 % 2 == 0) {
@@ -113,11 +110,6 @@
 
             possibl.appendChild(document.createTextNode(vals));
             cntr.appendChild(possibl);
-            // if (vals % 3 == 0) {
-            //     let tmp = create("span");
-            //     tmp.className = 'clear';
-            //     cntr.appendChild(tmp);
-            // }
         }
     }
 
@@ -132,7 +124,6 @@
     }
     function attachHandlers() {
 
-        switchAutoplay = byId('switchAutoplay');
         holder = byId("holder");
         var btnNext = byId("btnNext"),
             slctPresets = byId('slctPresets'),
@@ -162,7 +153,7 @@
 
         var btns = document.getElementsByClassName('btn-preset');
         for (var idx = 0; idx < btns.length; idx++) {
-            console.log(btns[idx]);
+
             btns[idx].addEventListener('click', function (evt) {
 
                 var presetName = evt.target.getAttribute("href").substr(1);
@@ -170,25 +161,14 @@
             });
         }
 
-        // slctPresets.addEventListener('change', () => {
-        //     let presetName = slctPresets.value;
-        //     if (presetName == 'custom') {
-        //         txtInitialValues.value = "custom";
-        //     } else {
-        //         txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
-        //     }
-        // });
-
         btnInitiate.addEventListener('click', function () {
             $('#sectionSetup').collapse();
-            // setStepNumberText("Setup Step")
-            // setStepDetailsText(getTextForStep(-1));
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
             generateBoard();
             displaySetupInstructions();
-            initialValues = JSON.parse(txtInitialValues.value);
 
+            initialValues = JSON.parse(txtInitialValues.value);
             values = initialValues.map(function (vals) {
                 return vals.map(function (single) {
                     return single;
@@ -217,31 +197,18 @@
                     }
                 }
             }
-
             possibilities = solver.defaultPossibilites();
-
-            // if (switchAutoplay.checked) {
-            //     setTimeout(execute, 5000);
-            // }
-            // }, 1000);
         });
     }
 
-    // let tipStepNumber = 1;
-
-    // function showNextStep() {
-    //     setStepNumberText(`Step ${(tipStepNumber % 7) + 1}`);
-    //     setStepDetailsText(getTextForStep(tipStepNumber % 7));
-    //     tipStepNumber++;
-    // }
     function execute() {
-        setStepNumberText("Step " + (stepNumber % 7 + 1));
-        setStepDetailsText(getTextForStep(stepNumber % 7));
-        setNextStepDetailsText(getTextForStep((stepNumber - 1) % 7));
+        setStepNumberText(getHeaderForStep((stepNumber + 1) % maxStepsCount));
+        setStepDetailsText(getTextForStep(stepNumber % maxStepsCount));
+        setNextStepDetailsText(getTextForStep((stepNumber + 1) % maxStepsCount));
         // tipStepNumber = stepNumber;
 
         solver.evaluationArrays.forEach(function (arr) {
-            switch (stepNumber % 7) {
+            switch (stepNumber % maxStepsCount) {
                 case 0:
                     possibilities = solver.removeDuplicates(values, possibilities, arr);
                     break;
@@ -249,7 +216,6 @@
                     possibilities = solver.isolateUniques(values, possibilities, arr);
                     break;
                 case 2:
-                    // possibilities = solver.cleanPossibilitiesByUniqueDefinitions(values, possibilities, arr);
                     possibilities = solver.findAndClearByNSizeDuplicatesInRow(values, possibilities, arr, 1);
                     break;
                 case 3:
@@ -262,10 +228,11 @@
                     possibilities = solver.findAndClearByNSizeDuplicatesInRow(values, possibilities, arr, 4);
                     break;
                 case 6:
-                    // debugger;
+                    possibilities = solver.cleanPossibilitiesByUniqueDefinitions(values, possibilities, arr);
+                    break;
+                case 7:
                     var preCountOfValues = solver.countNumberOfValues(values);
                     values = solver.attemptToCalculateValues(values, possibilities);
-                    // solver.attemptToCalculateValues(solver.values, possibilities);
                     var postCountOfValues = solver.countNumberOfValues(values);
 
                     is_solved = postCountOfValues == 81;
@@ -277,7 +244,6 @@
         });
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
-
                 if (values[i][j]) {
                     setCellValue(i, j, values[i][j], values[i][j] == initialValues[i][j]);
                 } else {
@@ -286,19 +252,6 @@
             }
         }
 
-        //  && !unsolvable
-        if (!is_solved) {
-            // if (switchAutoplay.checked) {
-            //     setTimeout(execute, 1000);
-            // }
-        } else {
-            // if (stepNumber < 50) {
-            //     setTimeout(execute, 1000);
-            // }
-            // debugger;
-            console.log("Is Solved", is_solved);
-            console.log("Unsolvable", unsolvable);
-        }
         stepNumber++;
     }
 
@@ -311,33 +264,50 @@
     });
 
     function setStepDetailsText(txt) {
-        byId("spanStepDetails").innerText = txt;
+        byId("spanStepDetails").innerHTML = txt;
     }
     function setNextStepDetailsText(txt) {
-        byId("spanNextStepDetails").innerText = txt;
+        byId("spanNextStepDetails").innerHTML = txt;
+        byId("spanNextStepDetails").scrollTop = '0px';
     }
 
     function displaySetupInstructions() {
         $('#initialSetupModal').modal();
+        setNextStepDetailsText(getTextForStep(stepNumber));
+        setStepDetailsText("");
+    }
+    function getHeaderForStep(stepNumber) {
+        return "Step " + (stepNumber + 1);
     }
     function getTextForStep(stepNumber) {
         var txt = null;
 
         switch (stepNumber) {
             case 0:
-                txt = "Check all the known values, and remove those possibilities from unknown cells. Why : since the value is present in either the row / column / subgrid those values cannot exist in the unknown cells";break;
+                txt = "<p>Check all the known values, and remove those possibilities from unknown cells. </p><p><em>Why :</em> since the value is present in either the row / column / subgrid those values cannot exist in the unknown cells.</p>";
+                break;
             case 1:
-                txt = "Check all rows, columns and sub grids to identify the possibilities which exist only once. Why : Since the possibilities are possible only in one cell, that possible value is unique.";break;
+                txt = "<p>Check all rows, columns and sub grids to identify the possibilities which exist only once. </p><p><em>Why :</em> Since the possibilities are possible only in one cell, that possible value is unique.</p>";
+                break;
             case 2:
-                txt = "";break;
+                txt = "<p>Identify the cells where only one possibility exists. This indicates that the number is guaranteed to be in that cell. So no other cell can contain the number in the corresponding row / column / grid. Remove the possibility of that number from all the rest of the cells in the row / column / grid.</p>";
+                break;
             case 3:
-                txt = "";break;
+                txt = "<p>Usually this step occurs in harder / medium puzzles. Identify set of 2 number(s) such that this set repeats 2 times in a grid / row / column. Since the locations / possibilities for this set of numbers are already decided, they cannot exist in any other location in the row / column / subgrid. Remove them from possibilities from the corresponding row / column / grid.</p>";
+                break;
             case 4:
-                txt = "";break;
+                txt = "<p>Usually this step occurs in harder / medium puzzles. Identify set of 3 number(s) such that this set repeats 3 times in a grid / row / column. Since the locations / possibilities for this set of numbers are already decided, they cannot exist in any other location in the row / column / subgrid. Remove them from possibilities from the corresponding row / column / grid.</p>";
+                break;
             case 5:
-                txt = "";break;
+                txt = "<p>Usually this step occurs in harder / medium puzzles. Identify set of 4 number(s) such that this set repeats 4 times in a grid / row / column. Since the locations / possibilities for this set of numbers are already decided, they cannot exist in any other location in the row / column / subgrid. Remove them from possibilities from the corresponding row / column / grid.</p>";
+                break;
             case 6:
-                txt = "In the cells which have only one possibility, set the value to that possibility.";break;
+                txt = "<p>Identify possibilities which are in the same row for a sub grid. Remove this possibility from the same row in all the other subgrids to the left and right of the subgrid. Similarly if a possibility is in only one column in a subgrid, clear that possibility from all the other subgrid to the top and bottom of the subgrid.</p>";
+                break;
+            case 7:
+                txt = "<p>In the cells which have only one possibility, set the value to that possibility. Repeat if the unknowns still exist.</p>";
+                break;
+
         }
         return txt;
     }

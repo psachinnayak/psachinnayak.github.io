@@ -133,6 +133,12 @@
         .btn-group {
             margin-top: 10px;
         }
+
+        .steps-description {
+            height: 100px;
+            overflow: auto;
+            font-size: 0.75rem;
+        }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -142,10 +148,10 @@
 
 </head>
 
-<body class=" bg-light">
+<body class=" bg-dark full-height">
     <main role="main" class="full-height">
 
-        <div class="container-fluid  bg-dark full-height">
+        <div class="container-fluid full-height">
             <h1 style="color: white;">Sudoku Solver with visual cues</h1>
             <section class="spanIntroduction">
                 <p>An attempt to visually depict logic of solving a Sudoku problem. Why this was written is explained in
@@ -260,6 +266,9 @@
                                 <br />
                             </div>
                         </div>
+                        <div class="clear">
+
+                        </div>
                     </div>
                 </div>
 
@@ -271,6 +280,7 @@
                         <div class="row">
                             <div class="col-lg-7 col-sm-12">
                                 <div id='holder'></div>
+                                <br>
                             </div>
                             <div class="col-lg-5 col-sm-12">
                                 <div class="card">
@@ -278,9 +288,8 @@
                                         <h3 id="spanStepNumber">Step 1</h3>
                                     </div>
                                     <div class="card-body">
+                                        <div id="spanNextStepDetails" class="steps-description"></div>
                                         <br>
-                                        <div id="spanNextStepDetails" style="overflow: auto"></div>
-
 
                                         <div class="d-flex justify-content-center">
                                             <button id="btnExecute" role="button" class="btn btn-primary">Execute
@@ -298,7 +307,7 @@
                                         <h3>Previous Step</h3>
                                     </div>
                                     <div class="card-body">
-                                        <div id="spanStepDetails" style="overflow: auto"></div>
+                                        <div id="spanStepDetails" class="steps-description"></div>
 
                                     </div>
                                 </div>
@@ -307,14 +316,22 @@
                         </div>
 
 
+                        <div class="clear">
+
+                        </div>
                     </div>
                 </div>
+                <div class="clear">
+
+                </div>
+
             </div>
 
 
 
         </div>
-        <br><span class="clear">&nbsp;</span>
+        <br>
+        <div class="clear">&nbsp;</div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -335,7 +352,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Setup - Assign default values</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
