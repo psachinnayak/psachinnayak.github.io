@@ -143,7 +143,10 @@
             execute();
         });
         byId("btnReset").addEventListener("click", function () {
-            gtag('send', 'event', 'button', 'click', 'reset');
+            gtag('event', 'click', {
+                'event_category': 'engagement',
+                'event_label': 'reset'
+            });
 
             solver = null;
             while (holder.childNodes.length > 0) {
@@ -164,12 +167,19 @@
             btns[idx].addEventListener('click', function (evt) {
                 var presetName = evt.target.getAttribute("href").substr(1);
                 txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
-                gtag('send', 'event', 'button', 'click', 'preset', presetName.substr(0, presetName.length - 1), parseInt(presetName.substr(presetName.length - 1)));
+
+                gtag('event', 'click', {
+                    'event_category': 'engagement',
+                    'event_label': presetName
+                });
             });
         }
 
         btnInitiate.addEventListener('click', function () {
-            gtag('send', 'event', 'button', 'click', 'initiate');
+            gtag('event', 'click', {
+                'event_category': 'engagement',
+                'event_label': 'initiate'
+            });
             $('#sectionSetup').collapse();
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
@@ -210,7 +220,11 @@
     }
 
     function execute() {
-        gtag('send', 'event', 'button', 'click', 'execute', 'step', stepNumber % maxStepsCount);
+        gtag('event', 'click', {
+            'event_category': 'engagement',
+            'event_label': 'execute ' + stepNumber % maxStepsCount
+
+        });
 
         setStepNumberText(getHeaderForStep((stepNumber + 1) % maxStepsCount));
         setStepDetailsText(getTextForStep(stepNumber % maxStepsCount));
