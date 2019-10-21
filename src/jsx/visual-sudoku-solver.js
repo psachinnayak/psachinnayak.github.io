@@ -1,4 +1,9 @@
 (function (window, document) {
+    // if(!ga){
+    //     ga = function(){
+    //         //ignore
+    //     }
+    // }
 
     var holder = null;
 
@@ -135,6 +140,8 @@
             execute();
         });
         byId("btnReset").addEventListener("click", () => {
+            ga('send', 'event', 'button', 'click', 'reset');
+
             solver = null;
             while (holder.childNodes.length > 0) {
                 holder.removeChild(holder.childNodes[0]);
@@ -153,14 +160,14 @@
         for (let idx = 0; idx < btns.length; idx++) {
 
             btns[idx].addEventListener('click', (evt) => {
-
                 let presetName = evt.target.getAttribute("href").substr(1);
                 txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
-
+                ga('send', 'event', 'button', 'click', 'preset', presetName.substr(0, presetName.length - 1), parseInt(presetName.substr(presetName.length - 1)));
             })
         }
 
         btnInitiate.addEventListener('click', () => {
+            ga('send', 'event', 'button', 'click', 'initiate');
             $('#sectionSetup').collapse();
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
@@ -197,7 +204,11 @@
         });
     }
 
+
+
     function execute() {
+        ga('send', 'event', 'button', 'click', 'execute', 'step', stepNumber % maxStepsCount);
+
         setStepNumberText(getHeaderForStep((stepNumber + 1) % maxStepsCount));
         setStepDetailsText(getTextForStep(stepNumber % maxStepsCount));
         setNextStepDetailsText(getTextForStep((stepNumber + 1) % maxStepsCount));
