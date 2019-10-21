@@ -140,7 +140,7 @@
             execute();
         });
         byId("btnReset").addEventListener("click", () => {
-            ga('send', 'event', 'button', 'click', 'reset');
+            gtag('send', 'event', 'button', 'click', 'reset');
 
             solver = null;
             while (holder.childNodes.length > 0) {
@@ -162,12 +162,12 @@
             btns[idx].addEventListener('click', (evt) => {
                 let presetName = evt.target.getAttribute("href").substr(1);
                 txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
-                ga('send', 'event', 'button', 'click', 'preset', presetName.substr(0, presetName.length - 1), parseInt(presetName.substr(presetName.length - 1)));
+                gtag('send', 'event', 'button', 'click', 'preset', presetName.substr(0, presetName.length - 1), parseInt(presetName.substr(presetName.length - 1)));
             })
         }
 
         btnInitiate.addEventListener('click', () => {
-            ga('send', 'event', 'button', 'click', 'initiate');
+            gtag('send', 'event', 'button', 'click', 'initiate');
             $('#sectionSetup').collapse();
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
@@ -207,7 +207,7 @@
 
 
     function execute() {
-        ga('send', 'event', 'button', 'click', 'execute', 'step', stepNumber % maxStepsCount);
+        gtag('send', 'event', 'button', 'click', 'execute', 'step', stepNumber % maxStepsCount);
 
         setStepNumberText(getHeaderForStep((stepNumber + 1) % maxStepsCount));
         setStepDetailsText(getTextForStep(stepNumber % maxStepsCount));
