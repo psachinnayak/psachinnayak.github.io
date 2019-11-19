@@ -209,6 +209,7 @@
         var btnInitiate = byId('btnInitiate');
 
         drawEditorBoard();
+
         btnExecute.addEventListener('click', function () {
             execute();
         });
@@ -251,6 +252,28 @@
                 'event_category': 'engagement',
                 'event_label': 'initiate'
             });
+            initialValues = getEditorValues();
+            var foundNonZero = false;
+            for (var i = 0; i < initialValues.length; i++) {
+                for (var j = 0; j < initialValues[i].length; j++) {
+                    if (initialValues[i][j] != 0) {
+                        foundNonZero = true;
+                        break;
+                    }
+                }
+                if (foundNonZero) {
+                    break;
+                }
+            }
+            if (!foundNonZero) {
+                initialValues = getInitialValues("initial_easy1");
+            }
+
+            var divs = document.getElementsByClassName('defaulting-initial-values');
+            for (var _i = 0; _i < divs.length; _i++) {
+                divs[_i].style.display = foundNonZero ? "none" : "block";
+            }
+
             $('#sectionSetup').collapse();
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
@@ -258,7 +281,6 @@
             displaySetupInstructions();
 
             // initialValues = JSON.parse(txtInitialValues.value);
-            initialValues = getEditorValues();
             values = initialValues.map(function (vals) {
                 return vals.map(function (single) {
                     return single;
@@ -278,12 +300,12 @@
                         break;
                 }
             });
-            for (var i = 0; i < 9; i++) {
-                for (var j = 0; j < 9; j++) {
-                    if (values[i][j]) {
-                        setCellValue(i, j, values[i][j], true);
+            for (var _i2 = 0; _i2 < 9; _i2++) {
+                for (var _j = 0; _j < 9; _j++) {
+                    if (values[_i2][_j]) {
+                        setCellValue(_i2, _j, values[_i2][_j], true);
                     } else {
-                        setPossibilities(i, j, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                        setPossibilities(_i2, _j, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
                     }
                 }
             }

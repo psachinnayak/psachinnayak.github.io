@@ -206,6 +206,7 @@
         let btnInitiate = byId('btnInitiate');
 
         drawEditorBoard();
+
         btnExecute.addEventListener('click', () => {
             execute();
         });
@@ -249,6 +250,28 @@
                 'event_category': 'engagement',
                 'event_label': 'initiate'
             });
+            initialValues = getEditorValues();
+            let foundNonZero = false;
+            for(let i=0;i<initialValues.length;i++){
+                for(let j=0;j<initialValues[i].length;j++){
+                    if(initialValues[i][j]!=0){
+                        foundNonZero = true;
+                        break;
+                    }
+                }
+                if(foundNonZero){
+                    break;
+                }
+            }
+            if(!foundNonZero){
+                initialValues = getInitialValues("initial_easy1");
+            }
+
+            let divs = document.getElementsByClassName('defaulting-initial-values');
+            for(let i=0;i<divs.length;i++){
+                divs[i].style.display = (foundNonZero)?"none":"block";
+            }
+
             $('#sectionSetup').collapse();
             $("#sectionSudokuBoard").show();
             byId("sectionSudokuBoard").scrollIntoView();
@@ -256,7 +279,6 @@
             displaySetupInstructions();
 
             // initialValues = JSON.parse(txtInitialValues.value);
-            initialValues = getEditorValues();
             values = initialValues.map((vals) => vals.map((single) => single));
 
             solver = new SudokuSolver(values, (evtObject) => {
