@@ -126,16 +126,86 @@
             cell.classList.remove(clsName);
         }.bind(null, cell, clsName), 300);
     }
+    function drawEditorBoard() {
+        let pnlEditor = byId("pnlEditor");
+        for (let i = 0; i < 9; i++) {
+            // let div = document.createElement("div");
+            // div.className = 'cell';
+            // div.appendChild(document.createTextNode("Row " + (i + 1)));
+            // pnlEditor.appendChild(div)
+            for (let j = 0; j < 9; j++) {
+                let div = document.createElement("div");
+                div.className = "cell";
+                div.setAttribute('data-row', i);
+                div.setAttribute('data-col', j);
+                div.setAttribute('data-region-col', (j-(j%3))/3);
+                div.setAttribute('data-region-row', (i-(i%3))/3);
+                let txt = document.createElement("input");
+                txt.className = "cell-editor-txt";
+                txt.setAttribute('data-row', i);
+                txt.setAttribute('data-col', j);
+                txt.setAttribute("type", "number");
+                txt.setAttribute("max", 5);
+                txt.value = 0;
+                div.appendChild(txt);
+                pnlEditor.appendChild(div);
+            }
+            let div = document.createElement("div");
+            div.className = 'clear';
+            pnlEditor.appendChild(div);
+        }
+    }
+
+    function getEditorValues() {
+        let vals = [];
+        for (let i = 0; i < 9; i++) {
+            let rowVals = [];
+            for (let j = 0; j < 9; j++) {
+                rowVals.push(0);
+            }
+            vals.push(rowVals);
+        }
+        let cells = document.getElementsByClassName('cell-editor-txt');
+        for (let idx = 0; idx < cells.length; idx++) {
+            let elem = cells[idx];
+            let row = elem.getAttribute("data-row");
+            let col = elem.getAttribute("data-col");
+            row = parseInt(row);
+            col = parseInt(col);
+            vals[row][col] = parseInt(elem.value);
+        }
+
+        // alert(vals);
+        return vals;
+    }
+    function setEditorValues(values) {
+        // let vals = [];
+        // for (let i = 0; i < 9; i++) {
+        //     let rowVals = [];
+        //     for (let j = 0; j < 9; j++) {
+        //         rowVals.push(0);
+        //     }
+        //     vals.push(rowVals);
+        // }
+        let cells = document.getElementsByClassName('cell-editor-txt');
+        for (let idx = 0; idx < cells.length; idx++) {
+            let elem = cells[idx];
+            let row = elem.getAttribute("data-row");
+            let col = elem.getAttribute("data-col");
+            row = parseInt(row);
+            col = parseInt(col);
+            elem.value = values[row][col];
+        }
+    }
+
     function attachHandlers() {
 
         holder = byId("holder");
         let btnNext = byId("btnNext"), slctPresets = byId('slctPresets'), btnExecute = byId('btnExecute');
-        let txtInitialValues = byId("txtInitialValues");
+        // let txtInitialValues = byId("txtInitialValues");
         let btnInitiate = byId('btnInitiate');
 
-        // btnNext.addEventListener('click', () => {
-        //     showNextStep();
-        // });
+        drawEditorBoard();
         btnExecute.addEventListener('click', () => {
             execute();
         });
@@ -164,7 +234,8 @@
 
             btns[idx].addEventListener('click', (evt) => {
                 let presetName = evt.target.getAttribute("href").substr(1);
-                txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
+                setEditorValues(getInitialValues(presetName));
+                // txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
 
                 gtag('event', 'click', {
                     'event_category': 'engagement',
@@ -184,7 +255,8 @@
             generateBoard();
             displaySetupInstructions();
 
-            initialValues = JSON.parse(txtInitialValues.value);
+            // initialValues = JSON.parse(txtInitialValues.value);
+            initialValues = getEditorValues();
             values = initialValues.map((vals) => vals.map((single) => single));
 
             solver = new SudokuSolver(values, (evtObject) => {

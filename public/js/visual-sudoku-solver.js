@@ -127,18 +127,88 @@
             cell.classList.remove(clsName);
         }.bind(null, cell, clsName), 300);
     }
+    function drawEditorBoard() {
+        var pnlEditor = byId("pnlEditor");
+        for (var i = 0; i < 9; i++) {
+            // let div = document.createElement("div");
+            // div.className = 'cell';
+            // div.appendChild(document.createTextNode("Row " + (i + 1)));
+            // pnlEditor.appendChild(div)
+            for (var j = 0; j < 9; j++) {
+                var _div = document.createElement("div");
+                _div.className = "cell";
+                _div.setAttribute('data-row', i);
+                _div.setAttribute('data-col', j);
+                _div.setAttribute('data-region-col', (j - j % 3) / 3);
+                _div.setAttribute('data-region-row', (i - i % 3) / 3);
+                var txt = document.createElement("input");
+                txt.className = "cell-editor-txt";
+                txt.setAttribute('data-row', i);
+                txt.setAttribute('data-col', j);
+                txt.setAttribute("type", "number");
+                txt.setAttribute("max", 5);
+                txt.value = 0;
+                _div.appendChild(txt);
+                pnlEditor.appendChild(_div);
+            }
+            var div = document.createElement("div");
+            div.className = 'clear';
+            pnlEditor.appendChild(div);
+        }
+    }
+
+    function getEditorValues() {
+        var vals = [];
+        for (var i = 0; i < 9; i++) {
+            var rowVals = [];
+            for (var j = 0; j < 9; j++) {
+                rowVals.push(0);
+            }
+            vals.push(rowVals);
+        }
+        var cells = document.getElementsByClassName('cell-editor-txt');
+        for (var idx = 0; idx < cells.length; idx++) {
+            var elem = cells[idx];
+            var row = elem.getAttribute("data-row");
+            var col = elem.getAttribute("data-col");
+            row = parseInt(row);
+            col = parseInt(col);
+            vals[row][col] = parseInt(elem.value);
+        }
+
+        // alert(vals);
+        return vals;
+    }
+    function setEditorValues(values) {
+        // let vals = [];
+        // for (let i = 0; i < 9; i++) {
+        //     let rowVals = [];
+        //     for (let j = 0; j < 9; j++) {
+        //         rowVals.push(0);
+        //     }
+        //     vals.push(rowVals);
+        // }
+        var cells = document.getElementsByClassName('cell-editor-txt');
+        for (var idx = 0; idx < cells.length; idx++) {
+            var elem = cells[idx];
+            var row = elem.getAttribute("data-row");
+            var col = elem.getAttribute("data-col");
+            row = parseInt(row);
+            col = parseInt(col);
+            elem.value = values[row][col];
+        }
+    }
+
     function attachHandlers() {
 
         holder = byId("holder");
         var btnNext = byId("btnNext"),
             slctPresets = byId('slctPresets'),
             btnExecute = byId('btnExecute');
-        var txtInitialValues = byId("txtInitialValues");
+        // let txtInitialValues = byId("txtInitialValues");
         var btnInitiate = byId('btnInitiate');
 
-        // btnNext.addEventListener('click', () => {
-        //     showNextStep();
-        // });
+        drawEditorBoard();
         btnExecute.addEventListener('click', function () {
             execute();
         });
@@ -166,7 +236,8 @@
 
             btns[idx].addEventListener('click', function (evt) {
                 var presetName = evt.target.getAttribute("href").substr(1);
-                txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
+                setEditorValues(getInitialValues(presetName));
+                // txtInitialValues.value = JSON.stringify(getInitialValues(presetName));
 
                 gtag('event', 'click', {
                     'event_category': 'engagement',
@@ -186,7 +257,8 @@
             generateBoard();
             displaySetupInstructions();
 
-            initialValues = JSON.parse(txtInitialValues.value);
+            // initialValues = JSON.parse(txtInitialValues.value);
+            initialValues = getEditorValues();
             values = initialValues.map(function (vals) {
                 return vals.map(function (single) {
                     return single;
