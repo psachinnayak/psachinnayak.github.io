@@ -89,7 +89,7 @@ body::before {
     background-image: url('../images/sachin-background.png');
     background-size: cover;
     background-position: center;
-    opacity: 0.12;
+    opacity: 0.3;
     z-index: -1;
     pointer-events: none;
 }

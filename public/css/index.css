@@ -42,7 +42,7 @@ body::before {
   background-image: url('../images/sachin-background.png');
   background-size: cover;
   background-position: center;
-  opacity: 0.15;
+  opacity: 0.35;
   z-index: -1;
 }
 
