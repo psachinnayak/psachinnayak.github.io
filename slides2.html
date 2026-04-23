@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bahmni AI Stack - Presentation</title>
+  <script src="tailwind.css"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #020617; /* slate-950 */
+      color: #e2e8f0; /* slate-200 */
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Presentation Layout */
+    #presentation-area {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slide {
+      position: absolute;
+      width: 1280px;
+      height: 720px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease-in-out, visibility 0.5s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 10;
+    }
+
+    /* Scaling logic for smaller screens to keep 16:9 ratio */
+    @media (max-width: 1300px) {
+      .slide { transform: scale(0.8); }
+    }
+    @media (max-width: 1050px) {
+      .slide { transform: scale(0.6); }
+    }
+
+    /* Controls */
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 8px 16px;
+      border-radius: 99px;
+      border: 1px solid #334155;
+      backdrop-filter: blur(8px);
+    }
+
+    .control-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .control-btn:hover { color: #f8fafc; }
+    .control-btn:disabled { color: #475569; cursor: not-allowed; }
+
+    /* Custom Animations from previous React App */
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes flowDash {
+      to { stroke-dashoffset: -12; }
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .slide.active .animate-fade-up {
+      opacity: 0;
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .slide.active .animate-scale-in {
+      opacity: 0;
+      animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .slide.active .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    .animate-flow-dash {
+      animation: flowDash 0.8s linear infinite;
+    }
+    .animate-shimmer {
+      animation: shimmer 2.5s ease-in-out infinite;
+    }
+    .animate-spin-slow {
+      animation: spinSlow 3s linear infinite;
+    }
+
+    /* Animation delays to stagger entry */
+    .d-100 { animation-delay: 100ms !important; }
+    .d-200 { animation-delay: 200ms !important; }
+    .d-300 { animation-delay: 300ms !important; }
+    .d-400 { animation-delay: 400ms !important; }
+    .d-500 { animation-delay: 500ms !important; }
+    .d-600 { animation-delay: 600ms !important; }
+    .d-700 { animation-delay: 700ms !important; }
+    .d-800 { animation-delay: 800ms !important; }
+    .d-900 { animation-delay: 900ms !important; }
+    .d-1000 { animation-delay: 1000ms !important; }
+    .d-1100 { animation-delay: 1100ms !important; }
+    .d-1200 { animation-delay: 1200ms !important; }
+    .d-1300 { animation-delay: 1300ms !important; }
+    .d-1400 { animation-delay: 1400ms !important; }
+    .d-1600 { animation-delay: 1600ms !important; }
+    .d-1700 { animation-delay: 1700ms !important; }
+    .d-1800 { animation-delay: 1800ms !important; }
+    .d-2000 { animation-delay: 2000ms !important; }
+    .d-2200 { animation-delay: 2200ms !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Layer -->
+  <div id="controls">
+    <button class="control-btn" id="prev-btn" onclick="prevSlide()">
+      <i data-lucide="chevron-left"></i> Prev
+    </button>
+    <span class="text-slate-400 text-sm font-medium self-center" id="slide-counter">1 / 4</span>
+    <button class="control-btn" id="next-btn" onclick="nextSlide()">
+      Next <i data-lucide="chevron-right"></i>
+    </button>
+  </div>
+
+  <div id="presentation-area">
+    
+    <!-- SLIDE 1: Title -->
+    <div class="slide active" id="slide-1">
+      <div class="flex-1 flex flex-col items-center justify-center">
+        <div class="bg-indigo-600/20 p-6 rounded-3xl shadow-2xl shadow-indigo-900/50 border border-indigo-500/30 mb-8 animate-fade-up d-100">
+          <i data-lucide="brain-circuit" class="text-indigo-400 w-24 h-24"></i>
+        </div>
+        <h1 class="text-7xl font-bold leading-tight text-slate-100 mb-4 animate-fade-up d-200">Bahmni <span class="text-indigo-400">AI</span> Stack</h1>
+        <p class="text-2xl text-slate-400 font-medium tracking-wide animate-fade-up d-300">System Architecture & Workflow Diagrams</p>
+        
+        <div class="mt-16 text-slate-500 flex items-center gap-2 animate-fade-up d-500 text-lg">
+          Press <span class="bg-slate-800 px-3 py-1 rounded text-base text-slate-300 border border-slate-700">Space</span> or <span class="bg-slate-800 px-3 py-1 rounded text-base text-slate-300 border border-slate-700">→</span> to start
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Architecture -->
+    <div class="slide" id="slide-2">
+      <!-- Header -->
+      <header class="mb-8">
+        <div class="flex items-center gap-3">
+          <div class="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-900/50">
+            <i data-lucide="network" class="text-white w-8 h-8"></i>
+          </div>
+          <div>
+            <h1 class="text-3xl font-bold text-slate-100">Component Architecture</h1>
+            <p class="text-base text-indigo-400 font-medium tracking-wide">SYSTEM DIAGRAM</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="flex flex-col gap-6 w-full h-full">
+        <div class="flex justify-center mb-2 animate-fade-up d-100">
+          <div class="flex items-center gap-4 bg-slate-800 px-6 py-4 rounded-2xl border border-slate-700 shadow-lg shadow-slate-900/50 animate-float">
+            <div class="bg-indigo-500/20 p-3 rounded-full border border-indigo-500/30"><i data-lucide="stethoscope" class="text-indigo-400 w-6 h-6"></i></div>
+            <div>
+              <h3 class="font-bold text-slate-100 text-lg">Doctor / User</h3>
+              <p class="text-sm text-slate-400">Voice (Mic), Text Command, or UI Clicks</p>
+            </div>
+          </div>
+        </div>
+    
+        <div class="grid grid-cols-2 gap-8 flex-1">
+          <!-- LEFT: Client -->
+          <div class="relative p-6 rounded-3xl border-2 border-dashed border-slate-700 bg-slate-900/30 pt-10 animate-fade-up d-300">
+            <div class="absolute -top-3 left-8 bg-slate-800 px-4 py-1 text-sm font-bold text-slate-300 uppercase tracking-widest rounded-full border border-slate-600">Client Environment</div>
+            
+            <div class="flex flex-col gap-5 h-full">
+              <!-- Shell App -->
+              <div class="rounded-2xl border shadow-lg backdrop-blur-sm bg-gradient-to-br from-slate-800/40 to-slate-900/80 border-slate-700/80 animate-fade-up d-400">
+                <div class="flex items-center gap-2 px-4 py-3 border-b bg-slate-800/50 text-slate-300 border-slate-700 font-semibold text-base">
+                  <i data-lucide="layout" class="w-5 h-5 opacity-80"></i> Shell App (distro/)
+                </div>
+                <div class="p-4 flex flex-col gap-3">
+                  <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-slate-700 animate-scale-in d-400">
+                    <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="laptop" class="w-5 h-5"></i></div>
+                    <div><div class="font-semibold text-base text-slate-200">app.tsx</div><div class="text-sm text-slate-400 mt-1">Router & AppContextProvider</div></div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-slate-700 animate-scale-in d-500">
+                      <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                      <div><div class="font-semibold text-base text-slate-200">ConsultationPage</div></div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-slate-700 animate-scale-in d-600">
+                      <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="layout" class="w-5 h-5"></i></div>
+                      <div><div class="font-semibold text-base text-slate-200">PatientHeader</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+              <div class="grid grid-cols-2 gap-4 flex-1">
+                <!-- Agent -->
+                <div class="rounded-2xl border shadow-lg backdrop-blur-sm bg-gradient-to-br from-purple-900/20 to-slate-900/80 border-purple-500/20 flex flex-col animate-fade-up d-700">
+                  <div class="flex items-center gap-2 px-4 py-3 border-b bg-purple-500/10 text-purple-300 border-purple-500/20 font-semibold text-base">
+                    <i data-lucide="mic" class="w-5 h-5 opacity-80"></i> Agent Bahmni
+                  </div>
+                  <div class="p-4 flex-1 flex flex-col gap-3">
+                    <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-purple-500/30 animate-scale-in d-800">
+                      <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="message-square" class="w-5 h-5"></i></div>
+                      <div><div class="font-semibold text-base text-slate-200">TranscriptPanel</div></div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-purple-500/30 animate-scale-in d-800">
+                      <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="settings" class="w-5 h-5"></i></div>
+                      <div><div class="font-semibold text-base text-slate-200">Orchestrator</div></div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Insights -->
+                <div class="rounded-2xl border shadow-lg backdrop-blur-sm bg-gradient-to-br from-emerald-900/20 to-slate-900/80 border-emerald-500/20 flex flex-col animate-fade-up d-900">
+                  <div class="flex items-center gap-2 px-4 py-3 border-b bg-emerald-500/10 text-emerald-300 border-emerald-500/20 font-semibold text-base">
+                    <i data-lucide="activity" class="w-5 h-5 opacity-80"></i> Clinical Insights
+                  </div>
+                  <div class="p-4 flex-1 flex flex-col gap-3">
+                    <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-emerald-500/30 animate-scale-in d-1000">
+                      <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="play" class="w-5 h-5"></i></div>
+                      <div><div class="font-semibold text-base text-slate-200">Action Button</div></div>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-emerald-500/30 animate-scale-in d-1000">
+                      <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="network" class="w-5 h-5"></i></div>
+                      <div><div class="font-semibold text-base text-slate-200">Insights Service</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <!-- RIGHT: Server -->
+          <div class="relative p-6 rounded-3xl border-2 border-dashed border-indigo-500/30 bg-indigo-900/10 pt-10 animate-fade-up d-500">
+            <div class="absolute -top-3 left-8 bg-slate-800 px-4 py-1 text-sm font-bold text-indigo-400 uppercase tracking-widest rounded-full border border-indigo-500/30">Backend Services</div>
+            
+            <div class="flex flex-col gap-5 h-full">
+              <!-- OpenMRS -->
+              <div class="rounded-2xl border shadow-lg backdrop-blur-sm bg-gradient-to-br from-blue-900/20 to-slate-900/80 border-blue-500/20 animate-fade-up d-600">
+                <div class="flex items-center gap-2 px-4 py-3 border-b bg-blue-500/10 text-blue-300 border-blue-500/20 font-semibold text-base">
+                  <i data-lucide="server" class="w-5 h-5 opacity-80"></i> OpenMRS / Bahmni Backend
+                </div>
+                <div class="p-4 grid grid-cols-2 gap-3">
+                  <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-blue-500/30 animate-scale-in d-700">
+                    <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="network" class="w-5 h-5"></i></div>
+                    <div><div class="font-semibold text-base text-slate-200">Patient REST</div></div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-blue-500/30 animate-scale-in d-700">
+                    <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="network" class="w-5 h-5"></i></div>
+                    <div><div class="font-semibold text-base text-slate-200">Visit REST</div></div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-blue-500/30 animate-scale-in d-800">
+                    <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="network" class="w-5 h-5"></i></div>
+                    <div><div class="font-semibold text-base text-slate-200">Concept REST</div></div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-blue-500/30 animate-scale-in d-800">
+                    <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="database" class="w-5 h-5"></i></div>
+                    <div><div class="font-semibold text-base text-slate-200">FHIR R4</div></div>
+                  </div>
+                </div>
+              </div>
+    
+              <!-- Bahmni AI Backend -->
+              <div class="rounded-2xl border shadow-lg backdrop-blur-sm bg-gradient-to-br from-emerald-900/20 to-slate-900/80 border-emerald-500/20 animate-fade-up d-900 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 px-4 py-3 border-b bg-emerald-500/10 text-emerald-300 border-emerald-500/20 font-semibold text-base">
+                  <i data-lucide="brain-circuit" class="w-5 h-5 opacity-80"></i> Bahmni AI Backend
+                </div>
+                <div class="p-4 flex flex-col gap-3 flex-1 justify-center">
+                  <div class="flex items-start gap-3 p-3 rounded-xl border bg-slate-800/80 border-emerald-500/30 animate-scale-in d-1000">
+                    <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="radio" class="w-5 h-5"></i></div>
+                    <div><div class="font-semibold text-base text-slate-200">/api/v1/insights/stream</div><div class="text-sm text-slate-400">SSE pipeline (FHIR → LLM → Guardrails)</div></div>
+                  </div>
+                </div>
+              </div>
+    
+              <div class="grid grid-cols-2 gap-4">
+                <div class="rounded-2xl border shadow-lg backdrop-blur-sm bg-gradient-to-br from-orange-900/20 to-slate-900/80 border-orange-500/20 animate-fade-up d-1100">
+                  <div class="flex items-center gap-2 px-4 py-3 border-b bg-orange-500/10 text-orange-300 border-orange-500/20 font-semibold text-base">
+                    <i data-lucide="globe" class="w-5 h-5 opacity-80"></i> Anthropic API
+                  </div>
+                </div>
+                <div class="rounded-2xl border shadow-lg backdrop-blur-sm bg-gradient-to-br from-orange-900/20 to-slate-900/80 border-orange-500/20 animate-fade-up d-1200">
+                  <div class="flex items-center gap-2 px-4 py-3 border-b bg-orange-500/10 text-orange-300 border-orange-500/20 font-semibold text-base">
+                    <i data-lucide="mic" class="w-5 h-5 opacity-80"></i> Whisper Server
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Clinical Flow -->
+    <div class="slide" id="slide-3">
+      <!-- Header -->
+      <header class="mb-8">
+        <div class="flex items-center gap-3">
+          <div class="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-900/50">
+            <i data-lucide="workflow" class="text-white w-8 h-8"></i>
+          </div>
+          <div>
+            <h1 class="text-3xl font-bold text-slate-100">Clinical Flow</h1>
+            <p class="text-base text-indigo-400 font-medium tracking-wide">3-STEP WORKFLOW</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="relative grid grid-cols-3 gap-6 flex-1 pt-6">
+        <!-- Connecting Line -->
+        <div class="absolute top-12 left-[16.6%] right-[16.6%] h-0.5 bg-slate-800 -z-10 animate-fade-up d-800"></div>
+  
+        <!-- STEP 1 -->
+        <div class="flex flex-col relative z-10 animate-fade-up d-100">
+          <div class="flex flex-col items-center gap-3 mb-6">
+            <div class="w-16 h-16 bg-purple-600 text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg shadow-purple-900/50 border border-purple-500 transform rotate-3">1</div>
+            <div class="text-center">
+              <h3 class="font-bold text-2xl text-slate-100">Register Patient</h3>
+              <p class="text-base text-slate-400">Doctor dictates demographics</p>
+            </div>
+          </div>
+          
+          <div class="h-full rounded-2xl border shadow-lg backdrop-blur-sm flex flex-col bg-gradient-to-br from-purple-900/20 to-slate-900/80 border-purple-500/20 animate-fade-up d-200">
+            <div class="p-5 flex-1 flex flex-col gap-3">
+              <div class="flex items-start gap-3 p-3 rounded-xl border shadow-md bg-slate-800/80 border-purple-500/30 animate-scale-in d-300">
+                <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="mic" class="w-6 h-6"></i></div>
+                <div><div class="font-semibold text-base text-slate-200">Doctor Input</div><div class="text-sm text-slate-400 mt-1">"Register patient John Doe..."</div></div>
+              </div>
+              <div class="flex justify-center my-1 animate-fade-up d-400 text-purple-400">
+                <svg width="12" height="24" viewBox="0 0 12 24" class="overflow-visible drop-shadow-[0_0_3px_currentColor]">
+                  <line x1="6" y1="0" x2="6" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" class="animate-flow-dash opacity-70" stroke-linecap="round" />
+                  <path d="M2 16 L6 22 L10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="flex items-start gap-3 p-3 rounded-xl border shadow-md bg-slate-800/80 border-slate-700 animate-scale-in d-500">
+                <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="settings" class="w-6 h-6"></i></div>
+                <div><div class="font-semibold text-base text-slate-200">register_patient</div><div class="text-sm text-slate-400 mt-1">Agent maps info to schema</div></div>
+              </div>
+              <div class="flex justify-center my-1 animate-fade-up d-600 text-purple-400">
+                <svg width="12" height="24" viewBox="0 0 12 24" class="overflow-visible drop-shadow-[0_0_3px_currentColor]">
+                  <line x1="6" y1="0" x2="6" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" class="animate-flow-dash opacity-70" stroke-linecap="round" />
+                  <path d="M2 16 L6 22 L10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="flex items-start gap-3 p-3 rounded-xl border shadow-md bg-slate-800/80 border-blue-500/30 animate-scale-in d-700">
+                <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="database" class="w-6 h-6"></i></div>
+                <div><div class="font-semibold text-base text-slate-200">Patient API</div><div class="text-sm text-slate-400 mt-1">Creates record & fetches FHIR</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- STEP 2 -->
+        <div class="flex flex-col relative z-10 animate-fade-up d-400">
+          <div class="flex flex-col items-center gap-3 mb-6">
+            <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg shadow-blue-900/50 border border-blue-500 transform -rotate-3">2</div>
+            <div class="text-center">
+              <h3 class="font-bold text-2xl text-slate-100">Start Encounter</h3>
+              <p class="text-base text-slate-400">Agent creates active visit</p>
+            </div>
+          </div>
+
+          <div class="h-full rounded-2xl border shadow-lg backdrop-blur-sm flex flex-col bg-gradient-to-br from-blue-900/20 to-slate-900/80 border-blue-500/20 animate-fade-up d-500">
+            <div class="p-5 flex-1 flex flex-col gap-3">
+              <div class="flex items-start gap-3 p-3 rounded-xl border shadow-md bg-slate-800/80 border-blue-500/30 animate-scale-in d-600">
+                <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="message-square" class="w-6 h-6"></i></div>
+                <div><div class="font-semibold text-base text-slate-200">Doctor Input</div><div class="text-sm text-slate-400 mt-1">"Start encounter for John"</div></div>
+              </div>
+              <div class="flex justify-center my-1 animate-fade-up d-700 text-blue-400">
+                <svg width="12" height="24" viewBox="0 0 12 24" class="overflow-visible drop-shadow-[0_0_3px_currentColor]">
+                  <line x1="6" y1="0" x2="6" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" class="animate-flow-dash opacity-70" stroke-linecap="round" />
+                  <path d="M2 16 L6 22 L10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="flex items-start gap-3 p-3 rounded-xl border shadow-md bg-slate-800/80 border-slate-700 animate-scale-in d-800">
+                <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="settings" class="w-6 h-6"></i></div>
+                <div><div class="font-semibold text-base text-slate-200">start_encounter</div><div class="text-sm text-slate-400 mt-1">Validates active visits</div></div>
+              </div>
+              <div class="flex justify-center my-1 animate-fade-up d-900 text-blue-400">
+                <svg width="12" height="24" viewBox="0 0 12 24" class="overflow-visible drop-shadow-[0_0_3px_currentColor]">
+                  <line x1="6" y1="0" x2="6" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" class="animate-flow-dash opacity-70" stroke-linecap="round" />
+                  <path d="M2 16 L6 22 L10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="flex items-start gap-3 p-3 rounded-xl border shadow-md bg-slate-800/80 border-emerald-500/30 animate-scale-in d-1000">
+                <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="layout" class="w-6 h-6"></i></div>
+                <div><div class="font-semibold text-base text-slate-200">Navigation Event</div><div class="text-sm text-slate-400 mt-1">Opens consultation page</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- STEP 3 -->
+        <div class="flex flex-col relative z-10 animate-fade-up d-700">
+          <div class="flex flex-col items-center gap-3 mb-6">
+            <div class="w-16 h-16 bg-emerald-600 text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg shadow-emerald-900/50 border border-emerald-500 transform rotate-3">3</div>
+            <div class="text-center">
+              <h3 class="font-bold text-2xl text-slate-100">Generate Insights</h3>
+              <p class="text-base text-slate-400">Read-only AI consultation</p>
+            </div>
+          </div>
+
+          <div class="h-full rounded-2xl border shadow-lg backdrop-blur-sm flex flex-col bg-gradient-to-br from-emerald-900/20 to-slate-900/80 border-emerald-500/20 animate-fade-up d-800">
+            <div class="p-5 flex-1 flex flex-col gap-3">
+              <div class="flex items-start gap-3 p-3 rounded-xl border shadow-md bg-slate-800/80 border-emerald-500/30 animate-scale-in d-900">
+                <div class="mt-0.5 p-1 rounded-md bg-slate-900 border border-slate-700 text-slate-400"><i data-lucide="play" class="w-6 h-6"></i></div>
+                <div><div class="font-semibold text-base text-slate-200">User Click</div><div class="text-sm text-slate-400 mt-1">Triggers Insights in Header</div></div>
+              </div>
+              <div class="flex justify-center my-1 animate-fade-up d-1000 text-emerald-400">
+                <svg width="12" height="24" viewBox="0 0 12 24" class="overflow-visible drop-shadow-[0_0_3px_currentColor]">
+                  <line x1="6" y1="0" x2="6" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" class="animate-flow-dash opacity-70" stroke-linecap="round" />
+                  <path d="M2 16 L6 22 L10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="bg-emerald-900/20 rounded-xl p-4 border border-emerald-500/20 flex flex-col gap-3 animate-fade-up d-1100 flex-1 justify-center">
+                <span class="px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider shadow-sm bg-emerald-500/20 text-emerald-300 border-emerald-500/30 w-max mb-1">SSE Stream Pipeline</span>
+                <div class="text-base text-slate-300 flex flex-col gap-3 mt-1">
+                  <span class="flex items-center gap-3"><i data-lucide="database" class="w-5 h-5 text-emerald-400"></i> 1. Fetch Patient FHIR</span>
+                  <span class="flex items-center gap-3"><i data-lucide="file-text" class="w-5 h-5 text-emerald-400"></i> 2. Load Clinical Guidelines</span>
+                  <span class="flex items-center gap-3"><i data-lucide="brain-circuit" class="w-5 h-5 text-emerald-400"></i> 3. LLM Structured Analysis</span>
+                  <span class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i> 4. Guardrail Validation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+
+    <!-- SLIDE 4: State Machine (Re-imagined with Node Zones) -->
+    <div class="slide" id="slide-4">
+      <!-- Header -->
+      <header class="mb-4">
+        <div class="flex items-center gap-3">
+          <div class="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-900/50">
+            <i data-lucide="radio" class="text-white w-8 h-8"></i>
+          </div>
+          <div>
+            <h1 class="text-3xl font-bold text-slate-100">State Machine</h1>
+            <p class="text-base text-indigo-400 font-medium tracking-wide">VOICE-TO-FORM FLOW</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Graph Container -->
+      <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 w-full shadow-2xl flex-1 flex flex-col relative animate-fade-up d-100 justify-between items-center overflow-hidden">
+        
+        <!-- SVG Connections Background Overlay -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-70 drop-shadow-[0_0_3px_currentColor]" preserveAspectRatio="none" viewBox="0 0 1000 500">
+           <!-- Idle -> Voice -->
+           <path d="M 500 50 C 500 100, 300 90, 300 130" fill="none" stroke="#475569" stroke-width="3" stroke-dasharray="6 6" class="animate-flow-dash" stroke-linecap="round"/>
+           <path d="M 296 123 L 300 132 L 304 123" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+           
+           <!-- Idle -> Text -->
+           <path d="M 500 50 C 500 100, 780 90, 780 160" fill="none" stroke="#475569" stroke-width="3" stroke-dasharray="6 6" class="animate-flow-dash" stroke-linecap="round"/>
+           <path d="M 776 153 L 780 162 L 784 153" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+           
+           <!-- Voice -> Processing -->
+           <path d="M 380 390 C 380 430, 500 420, 500 440" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="6 6" class="animate-flow-dash opacity-60" stroke-linecap="round"/>
+           <path d="M 496 433 L 500 442 L 504 433" fill="none" stroke="#a855f7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+           
+           <!-- Text -> Processing -->
+           <path d="M 780 330 C 780 430, 500 420, 500 440" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="6 6" class="animate-flow-dash opacity-60" stroke-linecap="round"/>
+           <path d="M 496 433 L 500 442 L 504 433" fill="none" stroke="#a855f7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+           <!-- Return Loop: Processing -> Idle -->
+           <path d="M 860 460 C 950 460, 950 50, 620 50" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="8 8" class="animate-flow-dash opacity-80" stroke-linecap="round"/>
+           <path d="M 627 46 L 618 50 L 627 54" fill="none" stroke="#3b82f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
+        <!-- TOP: IDLE BASE STATE -->
+        <div class="relative flex items-center justify-center px-12 py-4 rounded-full font-bold shadow-xl border-2 bg-slate-800 text-slate-200 border-slate-600 animate-scale-in d-200 text-2xl z-20 hover:scale-105 transition-transform cursor-default mt-2">
+          <i data-lucide="pause-circle" class="w-8 h-8 mr-3 text-slate-400"></i> Idle Base State
+        </div>
+
+        <!-- MIDDLE: SPLIT PIPELINES -->
+        <div class="flex w-full gap-10 px-12 relative z-20 my-4 flex-1">
+           
+           <!-- Voice Pipeline Node -->
+           <div class="flex-[0.55] bg-slate-800/50 rounded-3xl border border-slate-700/60 p-6 flex flex-col relative animate-fade-up d-400 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+              <!-- Node Badge -->
+              <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-slate-700 text-slate-200 px-5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border border-slate-600 shadow-sm flex items-center gap-2">
+                 <i data-lucide="mic" class="w-4 h-4"></i> Voice Pipeline
+              </div>
+
+              <!-- Content Inside Voice Pipeline -->
+              <div class="flex flex-col items-center w-full mt-4 h-full">
+                 
+                 <!-- Starting -->
+                 <div class="w-[80%] flex items-center justify-between px-6 py-4 bg-yellow-900/20 border border-yellow-700/50 rounded-2xl animate-scale-in d-600">
+                    <div class="flex items-center gap-3 text-yellow-400 font-bold text-xl"><i data-lucide="loader" class="w-6 h-6 animate-spin-slow"></i> Starting</div>
+                    <div class="text-xs text-yellow-500/80 font-bold bg-yellow-900/50 px-2 py-1 rounded">getUserMedia()</div>
+                 </div>
+
+                 <!-- Branches -->
+                 <div class="flex w-full mt-6 gap-6 flex-1">
+                    
+                    <!-- Denied Path -->
+                    <div class="w-1/3 flex flex-col items-center border-r-2 border-dashed border-slate-700/50 pr-4">
+                       <span class="text-xs text-red-400 bg-red-900/40 border border-red-800/50 px-3 py-1 rounded-full mb-3 animate-fade-up d-800 shadow-sm">Denied</span>
+                       <div class="w-full flex items-center justify-center gap-2 py-4 bg-red-900/20 border border-red-700/50 text-red-400 rounded-xl font-bold text-lg animate-scale-in d-900 mt-2">
+                          <i data-lucide="alert-triangle" class="w-6 h-6"></i> Error
+                       </div>
+                    </div>
+
+                    <!-- Granted Path -->
+                    <div class="w-2/3 flex flex-col items-center pl-2">
+                       <span class="text-xs text-emerald-400 bg-emerald-900/40 border border-emerald-800/50 px-3 py-1 rounded-full mb-3 animate-fade-up d-800 shadow-sm">Granted</span>
+                       
+                       <div class="w-full flex items-center justify-center gap-3 py-4 bg-emerald-900/20 border border-emerald-700/50 text-emerald-400 rounded-xl font-bold text-xl relative animate-scale-in d-900 shadow-inner mt-2">
+                          <span class="absolute flex h-3 w-3 top-0 right-0 -mt-1 -mr-1">
+                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-emerald-500"></span>
+                             <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                          </span>
+                          <i data-lucide="ear" class="w-7 h-7"></i> Listening
+                       </div>
+
+                       <div class="flex flex-col items-center w-full mt-6 animate-fade-up d-1100">
+                          <div class="text-xs text-slate-400 font-medium mb-3">Silence Detected</div>
+                          <div class="w-full flex items-center justify-center gap-3 py-4 bg-orange-900/20 border border-orange-700/50 text-orange-400 rounded-xl font-bold text-xl">
+                             <i data-lucide="help-circle" class="w-7 h-7"></i> Confirming
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+
+           <!-- Text Pipeline Node -->
+           <div class="flex-[0.45] bg-slate-800/50 rounded-3xl border border-slate-700/60 p-6 flex flex-col items-center justify-center relative animate-fade-up d-500 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+              <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-slate-700 text-slate-200 px-5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border border-slate-600 shadow-sm flex items-center gap-2">
+                 <i data-lucide="keyboard" class="w-4 h-4"></i> Text Pipeline
+              </div>
+
+              <div class="flex flex-col items-center text-center px-4">
+                 <div class="bg-slate-700/50 p-6 rounded-2xl border border-slate-600 mb-6">
+                    <i data-lucide="message-square-text" class="w-16 h-16 text-slate-400"></i>
+                 </div>
+                 <div class="text-2xl font-bold text-slate-200">sendTextCommand()</div>
+                 <p class="text-base text-slate-400 mt-4 leading-relaxed">Bypasses audio orchestration and posts intent string directly to Anthropic proxy.</p>
+              </div>
+           </div>
+
+        </div>
+
+        <!-- BOTTOM: PROCESSING & LOOP -->
+        <div class="relative flex items-center justify-between w-[85%] px-10 py-6 rounded-3xl font-bold shadow-[0_0_50px_rgba(168,85,247,0.15)] border-2 bg-purple-900/20 text-purple-400 border-purple-500/40 animate-scale-in d-1400 z-20 overflow-hidden mb-2">
+            <!-- Glow Shimmer effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-purple-500/0 animate-shimmer pointer-events-none"></div>
+            
+            <div class="flex items-center gap-4 text-3xl text-purple-300">
+               <i data-lucide="cpu" class="w-10 h-10"></i> Processing
+            </div>
+            
+            <div class="flex items-center gap-4">
+               <div class="bg-purple-900/60 border border-purple-700/50 px-5 py-3 rounded-xl flex items-center gap-3 text-base text-purple-200 shadow-inner">
+                  <i data-lucide="refresh-cw" class="w-5 h-5 animate-spin"></i> Claude Tool-Use Loop
+               </div>
+               <div class="bg-purple-900/60 border border-purple-700/50 px-5 py-3 rounded-xl flex items-center gap-3 text-base text-purple-200 shadow-inner">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i> Dispatches 7 Tools
+               </div>
+            </div>
+        </div>
+        
+        <!-- Tooltip mapping loop resolution -->
+        <div class="absolute right-[4%] top-[45%] transform -translate-y-1/2 bg-blue-900/60 border border-blue-700/60 text-blue-200 px-5 py-3 rounded-2xl text-sm font-bold animate-fade-up d-1800 z-30 shadow-[0_0_30px_rgba(59,130,246,0.2)] backdrop-blur-md text-center">
+           <i data-lucide="corner-right-up" class="w-6 h-6 mb-2 mx-auto text-blue-400"></i>
+           stop_reason =<br/><span class="text-white mt-1 block">"end_turn"</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Presentation Logic
+    let currentSlide = 1;
+    const totalSlides = 4;
+
+    function updatePresentation() {
+      // Update Slide Visibility
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        if (i === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          // Remove active and trigger reflow so animations restart when coming back
+          slide.classList.remove('active');
+        }
+      }
+
+      // Update Controls
+      document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+      document.getElementById('prev-btn').disabled = currentSlide === 1;
+      document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updatePresentation();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updatePresentation();
+      }
+    }
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    // Initial render
+    updatePresentation();
+  </script>
+</body>
+</html>
